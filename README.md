@@ -8,4 +8,5 @@ Wykorzystanie ró¿nego typu sieci neuronowych do predykcji po³o¿enia obiektu poru
 
 #### Harmonogram prac
 
-TODO: Przygotowanie harmonogramu.
+1. Implementacja neuronu McCullocha-Pitts'a, sieci neuronowej-perceptronu oraz przygotowanie zestawu ucz¹cego z rekordami w postaci 5 znanych po³o¿eñ obiektu i szóstego, który ma zostaæ przewidziany przez neuron. W przypadku perceptronu, ze wzglêdu na skokowy charakter funkcji aktywacji (wykorzystana zostanie funkcja bipolarna), zadaniem sieci neuronowej bêdzie predykcja jedynie znaków zmian wspó³rzêdnych po³o¿enia w punkcie P6, rozumianej dla wspó³rzêdnej k jako sgn(k6-k5). Dla sgn(k6-k5)=0 przyjmujemy, ¿e funkcja aktywacji powinna przyj¹æ wartoœæ 1.
+
