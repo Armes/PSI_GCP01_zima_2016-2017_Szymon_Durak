@@ -14,7 +14,7 @@ public class DataGenerator {
     File saveFile;
     private List<Function<Double,Double[]>> expressions; //Function that accepts single Double parameter and returns 3 Double coordinates.
     private Random random;
-    public static final Double delta=0.001;
+    public static final Double delta=0.000001;
     public static final Double standardRange=1.;
     public static final Double extendedRangeMultiplier =10.;
     private ArgumentSet arguments;

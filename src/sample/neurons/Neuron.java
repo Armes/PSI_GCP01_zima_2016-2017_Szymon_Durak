@@ -10,9 +10,9 @@ import java.util.function.Function;
  * Created by Szymon on 06.10.2016.
  */
 public abstract class Neuron {
-    public static final Double LEARNING_RATE=0.05;
+    public static final Double LEARNING_RATE=0.1;
     protected Connection[] connections;
-    private Double lastSignal;
+    protected Double lastSignal;
 
     public Double getSignal(){
         return lastSignal;
@@ -25,7 +25,8 @@ public abstract class Neuron {
         update();
         return lastSignal;
     }
-
+    public Neuron(){
+    }
     protected abstract Double activationFunction(Double signal);
     public abstract void applyLearningRule(Double output, Double expectedOutput);
     private Double sumSignals() {

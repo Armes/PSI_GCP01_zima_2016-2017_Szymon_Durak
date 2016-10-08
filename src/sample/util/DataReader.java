@@ -25,6 +25,6 @@ public class DataReader {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        return;
     }
 }

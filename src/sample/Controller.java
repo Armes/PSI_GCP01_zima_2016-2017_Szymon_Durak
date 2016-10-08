@@ -4,6 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import sample.networks.NeuralNetwork;
@@ -16,6 +19,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable{
+    @FXML
+    public Slider numberOfEpochsSlider;
+    @FXML
+    public Slider numberOfNetworksSlider;
+    @FXML
+    public Slider numberOfCyclesSlider;
+    @FXML
+    public Slider numberOfNetworksPerChartSlider;
+    @FXML
+    public RadioButton perceptronRadio;
+    @FXML
+    public ProgressBar epochProgress;
+    @FXML
+    public ProgressBar neuronProgress;
     @FXML
     private Button runButton;
     @FXML
@@ -30,7 +47,6 @@ public class Controller implements Initializable{
     public Controller()
 
     {
-        neuralNetworkLogic=new NeuralNetworkLogic();
     }
 
 
@@ -43,7 +59,7 @@ public class Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        neuralNetworkLogic=new NeuralNetworkLogic(neuronProgress,epochProgress);
     }
 
     public void run(ActionEvent actionEvent) {
@@ -54,7 +70,11 @@ public class Controller implements Initializable{
 
     private NeuronSettings getSettings() {
         NeuronSettings settings=new NeuronSettings();
-        return null;
+        settings.cyclesPerEpoch=(int)numberOfCyclesSlider.getValue();
+        settings.numberOfNeurons=(int)numberOfNetworksSlider.getValue();
+        settings.numberOfEpochs=(int)numberOfEpochsSlider.getValue();
+        settings.maxNeuronsOnCharts=(int)numberOfNetworksPerChartSlider.getValue();
+        return settings;
     }
 
     public void loadData(ActionEvent actionEvent) {

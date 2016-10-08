@@ -22,7 +22,7 @@ public class Perceptron extends NeuralNetwork<McCullochPittsNeuron> {
     public NetworkError verify(List<Double[]> inputData, Double[] expectedOutput){
         Double[] previous=inputData.get(inputData.size()-1);
         Double[] tmpExpectedOutput=adjustOutput(expectedOutput,previous);
-        return verify(inputData,tmpExpectedOutput);
+        return super.verify(inputData,tmpExpectedOutput);
     }
     public Double[] adjustOutput(Double[] expectedOutput,Double[] previous)
     {

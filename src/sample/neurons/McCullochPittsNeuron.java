@@ -8,9 +8,11 @@ public class McCullochPittsNeuron extends Neuron {
     protected Double activationFunction(Double signal) {
         return signal>0?1.:-1.;
     }
-
+    public McCullochPittsNeuron(){
+        super();
+    }
     @Override
-    protected void applyLearningRule(Double result,Double expectedResult) {
+    public void applyLearningRule(Double result, Double expectedResult) {
         for(Connection connection:connections)
         {
             if(result==expectedResult)

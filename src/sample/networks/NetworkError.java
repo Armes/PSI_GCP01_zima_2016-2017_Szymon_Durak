@@ -6,8 +6,8 @@ import java.util.List;
  * Created by Szymon on 08.10.2016.
  */
 public class NetworkError {
-    private Double MSE;
-    private Double MAPE;
+    private Double MSE=0.;
+    private Double MAPE=0.;
 
     public Double getMSE() {
         return MSE;
@@ -26,6 +26,8 @@ public class NetworkError {
             tmpMAPE+= Math.abs((expectedResults[i]-results[i])/expectedResults[i]!=0.?expectedResults[i]:1e-100);
             tmpMSE+= Math.pow(expectedResults[i]-results[i],2.);
         }
+        MAPE=tmpMAPE*100./(double)length;
+        MSE=tmpMSE/(double)length;
     }
     static public NetworkError combine(List<NetworkError> errors){
         NetworkError result=new NetworkError();

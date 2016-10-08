@@ -70,6 +70,11 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
 
     public class Layer<Type extends Neuron>{
         protected Neuron[] neurons;
+
+        public Layer() {
+
+        }
+
         public <SomeType extends Neuron> void bindToAnotherLayer(Layer<SomeType> another){
             for (Neuron neuron :
                     neurons) {
@@ -104,8 +109,12 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
     public class InputLayer extends Layer<InputNeuron>{
         Double[] inputs;
         public InputLayer(int size){
-            super(size,InputNeuron.class);
+            super();
+            neurons = new Neuron[size];
             inputs=new Double[size];
+            for (int i = 0; i < neurons.length; i++) {
+                    neurons[i]=new InputNeuron(inputs,i);
+            }
             for (int i = 0; i < size; i++) {
                 inputs[i]=0.;
             }
@@ -115,6 +124,15 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
                 inputs[i]=data[i+startIndex];
             }
 
+        }
+        @Override
+        public void compute()
+        {
+            for (Neuron neuron :
+                    neurons) {
+                InputNeuron asInputNeuron = (InputNeuron) neuron;
+                asInputNeuron.update();
+            }
         }
         public void readData(Double[] data)
         {
