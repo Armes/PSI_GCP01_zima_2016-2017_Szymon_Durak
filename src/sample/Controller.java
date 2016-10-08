@@ -14,7 +14,13 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable{
     @FXML
+    private Button runButton;
+    @FXML
+    private Button loadDataButton;
+    @FXML
     private Button generateDataButton;
+
+    File targetFile;
 
     public Controller()
 
@@ -31,6 +37,17 @@ public class Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
+    public void run(ActionEvent actionEvent) {
+        if(targetFile==null)
+            return;
+    }
+
+    public void loadData(ActionEvent actionEvent) {
+        FileChooser chooser=new FileChooser();
+        targetFile = chooser.showOpenDialog(null);
 
     }
 }

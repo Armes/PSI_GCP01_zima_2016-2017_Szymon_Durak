@@ -85,7 +85,6 @@ public class DataGenerator {
             OutputStream file=new FileOutputStream(saveFile);
             OutputStream stream=new BufferedOutputStream(file);
             ObjectOutput output=new ObjectOutputStream(stream);
-            //PrintWriter writer=new PrintWriter(saveFile);
             List<List<Double[]>> results=new LinkedList<>();
             for(Function<Double,Double[]> expression:expressions)
             {
@@ -94,25 +93,8 @@ public class DataGenerator {
                     results.add(getCoordinates(getStartingPoint(),getDt(),expression));
                 }
             }
-            //for (List<Double[]> vector: results
-            //        ) {
-            //    for (Double[] coordinates:vector
-            //            ) {
-            //        for (Double coordinate : coordinates) {
-            //            writer.print(coordinate+" ");
-            //        }
-            //        writer.print("\n");
-            //    }
-//
-            //}
-            //writer.print(results);
-            //writer.close();
             output.writeObject(results);
             output.close();
-            InputStream inFile=new FileInputStream(saveFile);
-            //BufferedInputStream inStream=new BufferedInputStream(inFile);
-            //ObjectInput input=new ObjectInputStream(inStream);
-            //results=(List<List<Double[]>>)input.readObject();
         } catch (IOException e) {
             e.printStackTrace();
         }
