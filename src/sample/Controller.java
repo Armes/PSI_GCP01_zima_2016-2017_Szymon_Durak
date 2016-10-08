@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import sample.util.DataGenerator;
+import sample.util.NeuralNetworkLogic;
 
 import java.io.File;
 import java.net.URL;
@@ -22,9 +23,12 @@ public class Controller implements Initializable{
 
     File targetFile;
 
+    NeuralNetworkLogic neuralNetworkLogic;
+
     public Controller()
 
     {
+        neuralNetworkLogic=new NeuralNetworkLogic();
     }
 
 
@@ -48,6 +52,6 @@ public class Controller implements Initializable{
     public void loadData(ActionEvent actionEvent) {
         FileChooser chooser=new FileChooser();
         targetFile = chooser.showOpenDialog(null);
-
+        neuralNetworkLogic.loadData(targetFile);
     }
 }

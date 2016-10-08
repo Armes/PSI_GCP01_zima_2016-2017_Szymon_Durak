@@ -12,12 +12,22 @@ import java.util.function.Function;
 public abstract class Neuron {
     public static final Double LEARNING_RATE=0.05;
     protected Connection[] connections;
+    private Double lastSignal;
+
     public Double getSignal(){
-        return activationFunction(sumSignals());
+        return lastSignal;
+    }
+    public void update()
+    {
+        lastSignal= activationFunction(sumSignals());
+    }
+    public Double updateAndGetSignal(){
+        update();
+        return lastSignal;
     }
 
     protected abstract Double activationFunction(Double signal);
-    protected abstract void applyLearningRule(Double output, Double expectedOutput);
+    public abstract void applyLearningRule(Double output, Double expectedOutput);
     private Double sumSignals() {
         Double sum=new Double(.0);
         for (Connection connection:connections
@@ -26,7 +36,13 @@ public abstract class Neuron {
         }
         return sum;
     }
-
+    public void setConnections(Neuron[] neurons)
+    {
+        connections=new Connection[neurons.length];
+        for (int i = 0; i < connections.length; i++) {
+            connections[i]=new Connection(neurons[i]);
+        }
+    }
     public class Connection{
         public Neuron inputNeuron;
         public Double inputWeight;
