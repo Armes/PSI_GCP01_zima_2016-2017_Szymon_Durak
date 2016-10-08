@@ -6,8 +6,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import sample.networks.NeuralNetwork;
 import sample.util.DataGenerator;
 import sample.util.NeuralNetworkLogic;
+import sample.util.NeuronSettings;
 
 import java.io.File;
 import java.net.URL;
@@ -47,6 +49,12 @@ public class Controller implements Initializable{
     public void run(ActionEvent actionEvent) {
         if(targetFile==null)
             return;
+        neuralNetworkLogic.runAsPerceptron(getSettings());
+    }
+
+    private NeuronSettings getSettings() {
+        NeuronSettings settings=new NeuronSettings();
+        return null;
     }
 
     public void loadData(ActionEvent actionEvent) {

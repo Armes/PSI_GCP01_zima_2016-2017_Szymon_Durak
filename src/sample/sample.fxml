@@ -27,6 +27,8 @@
          <children>
             <Slider fx:id="numberOfEpochsSlider" />
             <Slider fx:id="numberOfNetworksSlider" />
+            <Slider />
+            <Slider />
             <RadioButton fx:id="perceptronRadio" mnemonicParsing="false" text="Perceptron" />
          </children>
       </VBox>
@@ -34,6 +36,8 @@
          <children>
             <Label text="Liczba epok uczenia na sieć" />
             <Label text="Liczba sieci" />
+            <Label text="Liczba cykli na epokę" />
+            <Label text="Liczba sieci na wykresie" />
          </children>
       </VBox>
    </children>
