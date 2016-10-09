@@ -58,11 +58,11 @@ public class NeuralNetworkLogic {
                 NetworkError e1=l1.get(l1.size()-1), e2=l2.get(l2.size()-1);
                 double result=e1.getMSE()-e2.getMSE();
                 if(result>0.)
-                    return -1;
+                    return 1;
                 else if(result==0.)
                     return 0;
                 else
-                    return 1;
+                    return -1;
             });
             results=results.subList(0,settings.maxNeuronsOnCharts);
             writeMSEChartsFor(results,mseFile);
