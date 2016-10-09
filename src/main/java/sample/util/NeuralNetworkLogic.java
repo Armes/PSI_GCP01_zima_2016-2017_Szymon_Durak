@@ -37,7 +37,7 @@ public class NeuralNetworkLogic {
         File directory = new DirectoryChooser().showDialog(null);
         File mseFile=new File(directory,"MSE.txt");
         File mapeFile=new File(directory,"MAPE.txt");
-        File bestNeouronFile=new File(directory,"BestNeuron.txt");
+        File bestNeuronFile=new File(directory,"BestNeuron.txt");
         List<Pair<NeuralNetwork,List<NetworkError>>> results=new LinkedList<>();
         try {
             this.networks = new Perceptron[settings.numberOfNeurons];
@@ -64,14 +64,18 @@ public class NeuralNetworkLogic {
                 else
                     return 1;
             });
-            results=results.subList(0,settings.maxNeuronsOnCharts-1);
+            results=results.subList(0,settings.maxNeuronsOnCharts);
             writeMSEChartsFor(results,mseFile);
             writeMAPEChartsFor(results,mapeFile);
-            writeBestNeuron(results.get(0).getKey(),bestNeouronFile);
+            writeBestNeuron(results.get(0).getKey(),bestNeuronFile);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        results=null;
+        networks=null;
+        bestNeuronFile=null;
+        data=null;
     }
     protected void writeBestNeuron(NeuralNetwork neuralNetwork, File bestNeouronFile) throws IOException {
 
@@ -88,10 +92,9 @@ public class NeuralNetworkLogic {
         FileWriter writer = new FileWriter(mapeFile);
         BufferedWriter bufferedWriter=new BufferedWriter(writer);
         results.forEach(neuralNetworkListPair -> {
-            final String[] newLine = {""};
             neuralNetworkListPair.getValue().forEach(networkError -> {
                 try {
-                    bufferedWriter.write(String.format("%f2.4;", networkError.getMAPE()));
+                    bufferedWriter.write(String.format("%1.6f;", networkError.getMAPE()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -113,7 +116,7 @@ public class NeuralNetworkLogic {
             final String[] newLine = {""};
             neuralNetworkListPair.getValue().forEach(networkError -> {
                 try {
-                    bufferedWriter.write(String.format("%f2.4;", networkError.getMSE()));
+                    bufferedWriter.write(String.format("%1.6f;", networkError.getMSE()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

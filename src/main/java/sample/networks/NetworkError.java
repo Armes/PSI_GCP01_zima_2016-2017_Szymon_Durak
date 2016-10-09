@@ -22,11 +22,15 @@ public class NetworkError {
         double tmpMSE=0.;
         double tmpMAPE=0.;
         int length=results.length<expectedResults.length?results.length:expectedResults.length;
+        int n=length;
         for (int i = 0; i < length; i++) {
-            tmpMAPE+= Math.abs((expectedResults[i]-results[i])/expectedResults[i]!=0.?expectedResults[i]:1e-100);
+            if(expectedResults[i]!=0.)
+            tmpMAPE+= Math.abs((expectedResults[i]-results[i])/(expectedResults[i]));
+            else
+                n--;
             tmpMSE+= Math.pow(expectedResults[i]-results[i],2.);
         }
-        MAPE=tmpMAPE*100./(double)length;
+        MAPE=tmpMAPE*100./(double)(n!=0?n:1);
         MSE=tmpMSE/(double)length;
     }
     static public NetworkError combine(List<NetworkError> errors){
