@@ -8,11 +8,11 @@ import java.util.List;
  */
 public class DataReader {
     private File readFile;
-    private List<List<Double[]>> data;
+    private List<DataSet> data;
     public DataReader(File readFile){
         this.readFile=readFile;
     }
-    public List<List<Double[]>> getData(){
+    public List<DataSet> getData(){
         return data;
     }
     public void readFile(){
@@ -21,7 +21,7 @@ public class DataReader {
             InputStream file=new FileInputStream(readFile);
             InputStream input=new BufferedInputStream(file);
             ObjectInput stream=new ObjectInputStream(input);
-            data =(List<List<Double[]>>)stream.readObject();
+            data =(List<DataSet>)stream.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -10,7 +10,7 @@ import java.util.function.Function;
  * Created by Szymon on 06.10.2016.
  */
 public abstract class Neuron {
-    public static final Double LEARNING_RATE=0.1;
+    public static final Double LEARNING_RATE=0.0001;
     protected Connection[] connections;
     protected Double lastSignal;
 

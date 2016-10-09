@@ -30,10 +30,6 @@ public class Controller implements Initializable{
     @FXML
     public RadioButton perceptronRadio;
     @FXML
-    public ProgressBar epochProgress;
-    @FXML
-    public ProgressBar neuronProgress;
-    @FXML
     private Button runButton;
     @FXML
     private Button loadDataButton;
@@ -59,7 +55,7 @@ public class Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        neuralNetworkLogic=new NeuralNetworkLogic(neuronProgress,epochProgress);
+        neuralNetworkLogic=new NeuralNetworkLogic();
     }
 
     public void run(ActionEvent actionEvent) {

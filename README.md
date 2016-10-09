@@ -12,12 +12,12 @@ XOR(a,b) -> abs(a-b)
 EQ(a,b) -> (1-XOR(a,b))
 NOT(a) -> 1-a
 zmienne wejœciowe oznaczamy:
-ofl,ofr,or,ol,cfl,cfr,cbl,cbr
+a,b,c,d,e,f,g,h
 wyjœcia oznaczamy:
-outr,outl
+out1,out2
 funkcje testowe to:
-outr=AND(OR(OR(EQ(AND(ofl,0.7),ofr),OR(ol,NOT(or)))),EQ(NOT(OR(cfr,AND(cfl,0.5),OR(cbr,AND(cbl,0.5))
-outl=AND(OR(OR(EQ(AND(ofr,0.7),ofl),OR(or,NOT(ol)))),EQ(NOT(OR(cfl,AND(cfr,0.5),OR(cbl,AND(cbr,0.5))
+out1=AND(OR(OR(EQ(AND(a,0.7),b),OR(c,NOT(d)))),OR(NOT(OR(f,AND(e,0.5),OR(g,AND(h,0.5))
+out2=AND(OR(OR(EQ(AND(b,0.7),a),OR(d,NOT(c)))),OR(NOT(OR(e,AND(f,0.5),OR(h,AND(g,0.5))
 
 
 #### Harmonogram prac

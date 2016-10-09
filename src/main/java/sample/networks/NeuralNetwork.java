@@ -3,9 +3,7 @@ package sample.networks;
 import sample.neurons.InputNeuron;
 import sample.neurons.Neuron;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.DoubleBinaryOperator;
 
 /**
  * Created by Szymon on 08.10.2016.
@@ -29,8 +27,8 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
             }
         }
     }
-    public abstract void learn(List<Double[]> inputData,Double[] expectedOutput);
-    public NetworkError verify(List<Double[]> inputData,Double[] expectedOutput)
+    public abstract void learn(Double[] inputData, Double[] expectedOutput);
+    public NetworkError verify(Double[] inputData, Double[] expectedOutput)
     {
         Double[] results = processData(inputData);
         NetworkError error=new NetworkError();
@@ -47,25 +45,6 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
         }
         return innerLayers[innerLayers.length-1].getLayerOutput();
 
-    }
-    public Double[] processData(List<Double[]> inputData)
-    {
-        int dataLength=0;
-        for (Double[] subArray :
-                inputData) {
-            dataLength+=subArray.length;
-        }
-        Double[] result=new Double[dataLength];
-        int i=0;
-        for (Double[] subArray:
-                inputData) {
-            for (Double element :
-                    subArray) {
-                result[i] = element;
-                i++;
-            }
-        }
-        return processData(result);
     }
 
     public class Layer<Type extends Neuron>{

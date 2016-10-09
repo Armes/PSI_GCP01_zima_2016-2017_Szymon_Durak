@@ -9,6 +9,10 @@ public class McCullochPittsNeuronWithGeneralizedLearningRule extends McCullochPi
         super();
     }
     @Override
+    protected Double activationFunction(Double signal) {
+        return signal<0.?0.:signal>1.?1.:signal;
+    }
+    @Override
     public void applyLearningRule(Double result, Double expectedResult){
         for(Connection connection:connections)
         {
