@@ -5,6 +5,7 @@ import javafx.util.Pair;
 import sample.networks.NetworkError;
 import sample.networks.NeuralNetwork;
 import sample.networks.Perceptron;
+import sample.networks.UnilayerNetwork;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -171,7 +172,19 @@ public class NeuralNetworkLogic {
         return avgError;
     }
 
-    public void runAsMcCulloch(NeuronSettings settings) {
+    public void runAsMcCulloch(NeuronSettings settings) throws Exception {
+        this.networks = new UnilayerNetwork[settings.numberOfNeurons];
+        for (int i = 0; i < settings.numberOfNeurons; i++) {
+            this.networks[i]=new UnilayerNetwork(16,1);
+        }
+        runLearning(settings,(array)->{
+            Double[] results=new Double[1];
+            results[0]=1.;
+            for (int i = 0; i < array.length; i++) {
+                results[0]=results[0]>array[i]?array[i]:results[0];
+            }
+            return results;
+        });
 
     }
 }

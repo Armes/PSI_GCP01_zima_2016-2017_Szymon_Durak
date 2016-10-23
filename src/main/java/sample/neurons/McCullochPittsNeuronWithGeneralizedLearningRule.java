@@ -15,6 +15,7 @@ public class McCullochPittsNeuronWithGeneralizedLearningRule extends McCullochPi
     }
     @Override
     public void applyLearningRule(Double result, Double expectedResult){
+        constant+=LEARNING_RATE*(expectedResult-result);
         for(Connection connection:connections)
         {
             connection.inputWeight+=LEARNING_RATE*connection.inputNeuron.getSignal()*(expectedResult-result);

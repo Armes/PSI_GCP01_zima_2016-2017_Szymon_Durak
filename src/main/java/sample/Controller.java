@@ -68,7 +68,7 @@ public class Controller implements Initializable{
         }
         catch (Exception ignored)
         {
-
+            ignored.printStackTrace();
         }
     }
 
