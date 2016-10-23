@@ -1,6 +1,9 @@
 package sample.util;
 
+import com.google.gson.Gson;
+
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,82 +43,81 @@ public class DataGenerator {
         this.saveFile=saveFile;
         expressions = new ArrayList<>();
         expressions.add(subProblem->{
-            DataSet set=new DataSet(8,2);
+            DataSet set=new DataSet(16);
             Double[] inputs = set.inputs;
             for (int i = 0, inputsLength = inputs.length; i < inputsLength; i++) {
-                Boolean zero=i>inputsLength && subProblem;
-                inputs[i] = zero?0.:random.nextDouble();
+                inputs[i] = random.nextDouble();
             }
-            set.outputs[0]=AND(
-                    OR(
-                            OR(
-                                    AND(
-                                            set.inputs[0],
-                                            0.7
-                                    ),
-                                    set.inputs[1]
-                            ),
-                            OR(
-                                    set.inputs[2],
-                                    NOT(set.inputs[3]
-                                    )
-                            )
-                    ),
-                    EQ(
-                            NOT(
-                                    OR(
-                                            set.inputs[5],
-                                            AND(
-                                                    set.inputs[4],
-                                                    0.5
-                                            )
-                                    )
-                            ),
-                            OR(
-                                    set.inputs[7],
-                                    AND(
-                                            set.inputs[6],
-                                            0.5
-                                    )
-                            )
-
-                    )
-            );
-            set.outputs[1]=AND(
-                    OR(
-                            OR(
-                                    AND(
-                                            set.inputs[1],
-                                            0.7
-                                    ),
-                                    set.inputs[0]
-                            ),
-                            OR(
-                                    set.inputs[3],
-                                    NOT(set.inputs[2]
-                                    )
-                            )
-                    ),
-                    EQ(
-                            NOT(
-                                    OR(
-                                            set.inputs[4],
-                                            AND(
-                                                    set.inputs[5],
-                                                    0.5
-                                            )
-                                    )
-                            ),
-                            OR(
-                                    set.inputs[6],
-                                    AND(
-                                            set.inputs[7],
-                                            0.5
-                                    )
-                            )
-
-                    )
-            );
+            //set.outputs[0]=AND(
+            //        OR(
+            //                OR(
+            //                        AND(
+            //                                set.inputs[0],
+            //                                0.7
+            //                        ),
+            //                        set.inputs[1]
+            //                ),
+            //                OR(
+            //                        set.inputs[2],
+            //                        NOT(set.inputs[3]
+            //                        )
+            //                )
+            //        ),
+            //        EQ(
+            //                NOT(
+            //                        OR(
+            //                                set.inputs[5],
+            //                                AND(
+            //                                        set.inputs[4],
+            //                                        0.5
+            //                                )
+            //                        )
+            //                ),
+            //                OR(
+            //                        set.inputs[7],
+            //                        AND(
+            //                                set.inputs[6],
+            //                                0.5
+            //                        )
+            //                )
+            //
+            //        )
+            //);
+            //set.outputs[1]=AND(
+            //        OR(
+            //                OR(
+            //                        AND(
+            //                                set.inputs[1],
+            //                                0.7
+            //                        ),
+            //                        set.inputs[0]
+            //                ),
+            //                OR(
+            //                        set.inputs[3],
+            //                        NOT(set.inputs[2]
+            //                        )
+            //                )
+            //        ),
+            //        EQ(
+            //                NOT(
+            //                        OR(
+            //                                set.inputs[4],
+            //                                AND(
+            //                                        set.inputs[5],
+            //                                        0.5
+            //                                )
+            //                        )
+            //                ),
+            //                OR(
+            //                        set.inputs[6],
+            //                        AND(
+            //                                set.inputs[7],
+            //                                0.5
+            //                        )
+            //                )
+            //
+            //        )
+            //);
             return set;
         });
     }
@@ -123,9 +125,8 @@ public class DataGenerator {
     {
         try {
             saveFile.createNewFile();
-            OutputStream file=new FileOutputStream(saveFile);
-            OutputStream stream=new BufferedOutputStream(file);
-            ObjectOutput output=new ObjectOutputStream(stream);
+            Gson gson= new Gson();
+            FileWriter writer=new FileWriter(saveFile);
             List<DataSet> results=new LinkedList<>();
             for(Function<Boolean,DataSet> expression:expressions)
             {
@@ -135,8 +136,9 @@ public class DataGenerator {
                     results.add(expression.apply(i<size/10));
                 }
             }
-            output.writeObject(results);
-            output.close();
+            String output=gson.toJson(results);
+            writer.write(output);
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

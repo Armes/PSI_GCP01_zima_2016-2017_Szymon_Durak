@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -29,7 +30,6 @@
             <Slider fx:id="numberOfNetworksSlider" majorTickUnit="5.0" min="5.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" />
             <Slider fx:id="numberOfCyclesSlider" majorTickUnit="5.0" max="25.0" min="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="5.0" />
             <Slider fx:id="numberOfNetworksPerChartSlider" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="3.0" />
-            <RadioButton fx:id="perceptronRadio" mnemonicParsing="false" selected="true" text="Perceptron" />
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
@@ -41,5 +41,15 @@
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2" />
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+         <children>
+            <RadioButton fx:id="perceptronRadio" mnemonicParsing="false" selected="true" text="Zad 1 - Perceptron" toggleGroup="$tasks">
+               <toggleGroup>
+                  <ToggleGroup fx:id="tasks" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="mccullochRatio" mnemonicParsing="false" text="Zad 1 - McCulloch" toggleGroup="$tasks" />
+         </children>
+      </VBox>
    </children>
 </GridPane>

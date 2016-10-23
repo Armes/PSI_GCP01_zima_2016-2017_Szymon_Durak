@@ -1,17 +1,16 @@
 package sample.neurons;
 
 import com.sun.istack.internal.NotNull;
-import jdk.internal.util.xml.impl.Pair;
 
 import java.util.Random;
-import java.util.function.Function;
 
 /**
  * Created by Szymon on 06.10.2016.
  */
 public abstract class Neuron {
-    public static final Double LEARNING_RATE=0.0001;
-    protected Connection[] connections;
+    public static final Double LEARNING_RATE=1e-6;
+    public Connection[] connections;
+    public double constant =new Random().nextGaussian();
     protected Double lastSignal;
 
     public Double getSignal(){
@@ -30,7 +29,7 @@ public abstract class Neuron {
     protected abstract Double activationFunction(Double signal);
     public abstract void applyLearningRule(Double output, Double expectedOutput);
     private Double sumSignals() {
-        Double sum=new Double(.0);
+        Double sum= constant;
         for (Connection connection:connections
              ) {
             sum+=connection.getWeightedSignal();

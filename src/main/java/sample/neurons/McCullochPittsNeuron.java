@@ -17,11 +17,17 @@ public class McCullochPittsNeuron extends Neuron {
         {
             if(result==expectedResult)
                 continue;
-            else if(result>expectedResult)
-                connection.inputWeight-=connection.inputNeuron.getSignal()*LEARNING_RATE;
-            else
-                connection.inputWeight+=connection.inputNeuron.getSignal()*LEARNING_RATE;
+            else if(result>expectedResult) {
+                connection.inputWeight -= connection.inputNeuron.getSignal() * LEARNING_RATE;
+            }
+            else {
+                connection.inputWeight += connection.inputNeuron.getSignal() * LEARNING_RATE;
+            }
         }
+        if(result>expectedResult)
+            constant-=LEARNING_RATE;
+        else if(result<expectedResult)
+            constant+=LEARNING_RATE;
 
     }
 }

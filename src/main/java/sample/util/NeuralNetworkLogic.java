@@ -1,7 +1,5 @@
 package sample.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 import sample.networks.NetworkError;
@@ -15,6 +13,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Created by Szymon on 08.10.2016.
@@ -23,6 +22,7 @@ public class NeuralNetworkLogic {
     private DataReader dataReader;
     private List<DataSet> data;
     private NeuralNetwork[] networks;
+    Function<Double[], Double[]> outputExpr;
 
     public NeuralNetworkLogic() {
     }
@@ -32,18 +32,14 @@ public class NeuralNetworkLogic {
         this.dataReader.readFile();
         this.data=this.dataReader.getData();
     }
-
-    public void runAsPerceptron(NeuronSettings settings){
+    public void runLearning(NeuronSettings settings,Function<Double[], Double[]> outputExpr){
+        this.outputExpr=outputExpr;
         File directory = new DirectoryChooser().showDialog(null);
         File mseFile=new File(directory,"MSE.txt");
         File mapeFile=new File(directory,"MAPE.txt");
         File bestNeuronFile=new File(directory,"BestNeuron.txt");
         List<Pair<NeuralNetwork,List<NetworkError>>> results=new LinkedList<>();
         try {
-            this.networks = new Perceptron[settings.numberOfNeurons];
-            for (int i = 0; i < settings.numberOfNeurons; i++) {
-                this.networks[i]=new Perceptron(8,2);
-            }
             for (int i = 0; i < settings.numberOfNeurons; i++) {
                 List<NetworkError> errors=new LinkedList<>();
                 for(int j=0;j<settings.numberOfEpochs;j++){
@@ -76,12 +72,32 @@ public class NeuralNetworkLogic {
         networks=null;
         bestNeuronFile=null;
         data=null;
+
+    }
+    public void runAsPerceptron(NeuronSettings settings)throws Exception{
+        this.networks = new Perceptron[settings.numberOfNeurons];
+        for (int i = 0; i < settings.numberOfNeurons; i++) {
+            this.networks[i]=new Perceptron(16,2);
+        }
+        runLearning(settings,(array)->{
+            Double[] results=new Double[2];
+            results[0]=0.;
+            results[1]=0.;
+            for (int i = 0; i < array.length; i++) {
+                results[0]=results[0]<array[i]?array[i]:results[0];
+                results[1]=results[1]>array[i]?array[i]:results[1];
+            }
+            results[0]=results[0]<=0.85?0.:1.;
+            results[1]=results[1]>=0.15?0.:1.;
+            return results;
+        });
     }
     protected void writeBestNeuron(NeuralNetwork neuralNetwork, File bestNeouronFile) throws IOException {
 
         bestNeouronFile.createNewFile();
-        Gson gson= new Gson();
-        String output=gson.toJson(neuralNetwork);
+        //Gson gson= new Gson();
+        //String output=gson.toJson(neuralNetwork);
+        String output=neuralNetwork.getParameters();
         FileWriter writer=new FileWriter(bestNeouronFile);
         writer.write(output);
         writer.close();
@@ -130,7 +146,7 @@ public class NeuralNetworkLogic {
         bufferedWriter.close();
     }
 
-    private NetworkError performCycles(NeuronSettings settings,int neuronIndex) {
+    private NetworkError performCycles(NeuronSettings settings, int neuronIndex) {
         int cuttingPoint=7*data.size()/10;
         List<DataSet>
                 learningSet=data.subList(0,cuttingPoint),
@@ -140,7 +156,7 @@ public class NeuralNetworkLogic {
             for (DataSet set:
             learningSet){
                 Double[] input=set.inputs;
-                Double[] output=set.outputs;
+                Double[] output=outputExpr.apply(input);
                 networks[neuronIndex].learn(input,output);
             }
         }
@@ -148,11 +164,14 @@ public class NeuralNetworkLogic {
         for (DataSet set :
                 verifyingSet) {
             Double[] input=set.inputs;
-            Double[] output=set.outputs;
+            Double[] output=outputExpr.apply(input);
             networkErrorList.add(networks[neuronIndex].verify(input,output));
         }
         NetworkError avgError=NetworkError.combine(networkErrorList);
         return avgError;
     }
 
+    public void runAsMcCulloch(NeuronSettings settings) {
+
+    }
 }

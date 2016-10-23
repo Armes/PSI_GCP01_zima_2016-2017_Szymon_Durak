@@ -47,6 +47,22 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
 
     }
 
+    public String getParameters() {
+        String result="";
+        for (int i = 0; i < innerLayers.length; i++) {
+            result+=String.format("on layer[%d] :%n",i+1);
+            for (int j = 0; j < innerLayers[i].neurons.length; j++) {
+                result+=String.format("on neuron[%d][%d] :%n",i+1,j+1);
+                for (Neuron.Connection c :
+                        innerLayers[i].neurons[j].connections) {
+                    result += String.format("%+2.5f ; ", c.inputWeight);
+                }
+                result+=String.format(" constant: %+2.5f%n",innerLayers[i].neurons[j].constant);
+            }
+        }
+        return result;
+    }
+
     public class Layer<Type extends Neuron>{
         protected Neuron[] neurons;
 

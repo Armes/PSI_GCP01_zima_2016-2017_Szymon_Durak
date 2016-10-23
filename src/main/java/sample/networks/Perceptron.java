@@ -7,7 +7,7 @@ import sample.neurons.Neuron;
 /**
  * Created by Szymon on 08.10.2016.
  */
-public class Perceptron extends NeuralNetwork<McCullochPittsNeuronWithGeneralizedLearningRule> {
+public class Perceptron extends NeuralNetwork<McCullochPittsNeuron> {
     @Override
     public void learn(Double[] inputData, Double[] expectedOutput) {
         Double[] results=processData(inputData);
@@ -33,6 +33,6 @@ public class Perceptron extends NeuralNetwork<McCullochPittsNeuronWithGeneralize
     }
 
     public Perceptron(int inputs,int outputs) throws Exception {
-        super(new Integer[]{inputs,outputs},McCullochPittsNeuronWithGeneralizedLearningRule.class);
+        super(new Integer[]{inputs,outputs},McCullochPittsNeuron.class);
     }
 }

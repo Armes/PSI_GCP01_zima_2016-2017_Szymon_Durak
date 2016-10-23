@@ -3,10 +3,7 @@ package sample;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import sample.networks.NeuralNetwork;
@@ -29,6 +26,8 @@ public class Controller implements Initializable{
     public Slider numberOfNetworksPerChartSlider;
     @FXML
     public RadioButton perceptronRadio;
+    public ToggleGroup tasks;
+    public RadioButton mccullochRatio;
     @FXML
     private Button runButton;
     @FXML
@@ -61,7 +60,16 @@ public class Controller implements Initializable{
     public void run(ActionEvent actionEvent) {
         if(targetFile==null)
             return;
-        neuralNetworkLogic.runAsPerceptron(getSettings());
+        try {
+            if (tasks.getSelectedToggle().equals(perceptronRadio))
+                neuralNetworkLogic.runAsPerceptron(getSettings());
+            if (tasks.getSelectedToggle().equals(mccullochRatio))
+                neuralNetworkLogic.runAsMcCulloch(getSettings());
+        }
+        catch (Exception ignored)
+        {
+
+        }
     }
 
     private NeuronSettings getSettings() {
