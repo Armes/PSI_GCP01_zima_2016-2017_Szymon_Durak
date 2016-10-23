@@ -87,8 +87,8 @@ public class NeuralNetworkLogic {
                 results[0]=results[0]<array[i]?array[i]:results[0];
                 results[1]=results[1]>array[i]?array[i]:results[1];
             }
-            results[0]=results[0]<=0.85?0.:1.;
-            results[1]=results[1]>=0.15?0.:1.;
+            results[0]=results[0]<=0.65?0.:1.;
+            results[1]=results[1]>=0.35?0.:1.;
             return results;
         });
     }
