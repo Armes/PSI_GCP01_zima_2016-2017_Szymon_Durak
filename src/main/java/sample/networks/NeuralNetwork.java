@@ -27,7 +27,7 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
             }
         }
     }
-    public abstract void learn(Double[] inputData, Double[] expectedOutput);
+    public abstract NetworkError learn(Double[] inputData, Double[] expectedOutput);
     public NetworkError verify(Double[] inputData, Double[] expectedOutput)
     {
         Double[] results = processData(inputData);
@@ -61,6 +61,17 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
             }
         }
         return result;
+    }
+    public NetworkError standardLearnMode(Double[] inputData, Double[] expectedOutput) {
+        Double[] results=processData(inputData);
+        NetworkError error=new NetworkError();
+        error.calculate(results,expectedOutput);
+        Neuron[] neurons = innerLayers[0].neurons;
+        for (int i = 0, neuronsLength = neurons.length; i < neuronsLength; i++) {
+            Neuron neuron = neurons[i];
+            neuron.applyLearningRule(results[i],expectedOutput[i]);
+        }
+        return error;
     }
 
     public class Layer<Type extends Neuron>{

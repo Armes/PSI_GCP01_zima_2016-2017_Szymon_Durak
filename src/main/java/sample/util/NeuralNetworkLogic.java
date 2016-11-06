@@ -39,21 +39,21 @@ public class NeuralNetworkLogic {
         File mseFile=new File(directory,"MSE.txt");
         File mapeFile=new File(directory,"MAPE.txt");
         File bestNeuronFile=new File(directory,"BestNeuron.txt");
-        List<Pair<NeuralNetwork,List<NetworkError>>> results=new LinkedList<>();
+        List<Pair<NeuralNetwork,List<NetworkError[]>>> results=new LinkedList<>();
         try {
             for (int i = 0; i < settings.numberOfNeurons; i++) {
-                List<NetworkError> errors=new LinkedList<>();
+                List<NetworkError[]> errors=new LinkedList<>();
                 for(int j=0;j<settings.numberOfEpochs;j++){
                     Collections.shuffle(data);
-                    NetworkError error=performCycles(settings,i);
+                    NetworkError[] error=performCycles(settings,i);
                     errors.add(error);
                 }
                 results.add(new Pair<>(networks[i],errors));
             }
             results.sort((o1, o2) -> {
-                List<NetworkError> l1=o1.getValue(),l2=o2.getValue();
-                NetworkError e1=l1.get(l1.size()-1), e2=l2.get(l2.size()-1);
-                double result=e1.getMSE()-e2.getMSE();
+                List<NetworkError[]> l1=o1.getValue(),l2=o2.getValue();
+                NetworkError[] e1=l1.get(l1.size()-1), e2=l2.get(l2.size()-1);
+                double result=e1[1].getMSE()-e2[1].getMSE();
                 if(result>0.)
                     return 1;
                 else if(result==0.)
@@ -104,14 +104,32 @@ public class NeuralNetworkLogic {
         writer.close();
     }
 
-    protected void writeMAPEChartsFor(List<Pair<NeuralNetwork, List<NetworkError>>> results, File mapeFile) throws IOException {
+    protected void writeMAPEChartsFor(List<Pair<NeuralNetwork, List<NetworkError[]>>> results, File mapeFile) throws IOException {
         mapeFile.createNewFile();
         FileWriter writer = new FileWriter(mapeFile);
         BufferedWriter bufferedWriter=new BufferedWriter(writer);
         results.forEach(neuralNetworkListPair -> {
+            try{
+                bufferedWriter.write("Training Set Error;");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             neuralNetworkListPair.getValue().forEach(networkError -> {
                 try {
-                    bufferedWriter.write(String.format("%1.6f;", networkError.getMAPE()));
+                    bufferedWriter.write(String.format("%1.6f;", networkError[0].getMAPE()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            try {
+                bufferedWriter.newLine();
+                bufferedWriter.write("Verifying Set Error;");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            neuralNetworkListPair.getValue().forEach(networkError -> {
+                try {
+                    bufferedWriter.write(String.format("%1.6f;", networkError[1].getMAPE()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -125,15 +143,32 @@ public class NeuralNetworkLogic {
         bufferedWriter.close();
     }
 
-    protected void writeMSEChartsFor(List<Pair<NeuralNetwork, List<NetworkError>>> results, File mseFile) throws IOException {
+    protected void writeMSEChartsFor(List<Pair<NeuralNetwork, List<NetworkError[]>>> results, File mseFile) throws IOException {
         mseFile.createNewFile();
         FileWriter writer = new FileWriter(mseFile);
         BufferedWriter bufferedWriter=new BufferedWriter(writer);
         results.forEach(neuralNetworkListPair -> {
-            final String[] newLine = {""};
+            try{
+                bufferedWriter.write("Training Set Error;");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             neuralNetworkListPair.getValue().forEach(networkError -> {
                 try {
-                    bufferedWriter.write(String.format("%1.6f;", networkError.getMSE()));
+                    bufferedWriter.write(String.format("%1.6f;", networkError[0].getMSE()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            try {
+                bufferedWriter.newLine();
+                bufferedWriter.write("Verifying Set Error;");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            neuralNetworkListPair.getValue().forEach(networkError -> {
+                try {
+                    bufferedWriter.write(String.format("%1.6f;", networkError[1].getMSE()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -147,18 +182,19 @@ public class NeuralNetworkLogic {
         bufferedWriter.close();
     }
 
-    private NetworkError performCycles(NeuronSettings settings, int neuronIndex) {
+    private NetworkError[] performCycles(NeuronSettings settings, int neuronIndex) {
         int cuttingPoint=7*data.size()/10;
         List<DataSet>
                 learningSet=data.subList(0,cuttingPoint),
                 verifyingSet=data.subList(cuttingPoint,data.size());
+        List<NetworkError> trainingErrorList=new LinkedList<>();
         for (int i = 0; i < settings.cyclesPerEpoch; i++) {
             Collections.shuffle(learningSet);
             for (DataSet set:
             learningSet){
                 Double[] input=set.inputs;
                 Double[] output=outputExpr.apply(input);
-                networks[neuronIndex].learn(input,output);
+                trainingErrorList.add(networks[neuronIndex].learn(input,output));
             }
         }
         List<NetworkError> networkErrorList=new LinkedList<>();
@@ -168,8 +204,9 @@ public class NeuralNetworkLogic {
             Double[] output=outputExpr.apply(input);
             networkErrorList.add(networks[neuronIndex].verify(input,output));
         }
-        NetworkError avgError=NetworkError.combine(networkErrorList);
-        return avgError;
+        NetworkError avgVerifyError=NetworkError.combine(networkErrorList);
+        NetworkError avgTrainingError=NetworkError.combine(trainingErrorList);
+        return new NetworkError[]{avgTrainingError,avgVerifyError};
     }
 
     public void runAsMcCulloch(NeuronSettings settings) throws Exception {

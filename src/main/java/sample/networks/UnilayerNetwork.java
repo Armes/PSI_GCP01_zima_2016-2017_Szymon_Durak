@@ -13,12 +13,7 @@ public class UnilayerNetwork extends NeuralNetwork<McCullochPittsNeuronWithGener
     }
 
     @Override
-    public void learn(Double[] inputData, Double[] expectedOutput) {
-        Double[] results=processData(inputData);
-        Neuron[] neurons = innerLayers[0].neurons;
-        for (int i = 0, neuronsLength = neurons.length; i < neuronsLength; i++) {
-            Neuron neuron = neurons[i];
-            neuron.applyLearningRule(results[i],expectedOutput[i]);
-        }
+    public NetworkError learn(Double[] inputData, Double[] expectedOutput) {
+        return standardLearnMode(inputData,expectedOutput);
     }
 }
