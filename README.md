@@ -13,3 +13,6 @@ czujniki odleg³oœci zdolne wykrywaæ przeszkody terenowe w pewnym promieniu i roz
 1. Implementacja neuronu McCullocha-Pitts'a z funkcjami aktywacji unipolarn¹ i liniow¹, jednowarstwowej sieci neuronowej-perceptronu oraz przygotowanie zestawu ucz¹cego - reprezentuj¹cych odczyty z czujników
 Zadaniem perceptronu bêdzie okreœlenie czy zasz³a kolizja z przeszkod¹ z dowolnej strony - kolizja zachodzi, gdy którykolwiek czujnik wskazuje bardzo ma³¹ odleg³oœæ (wysoka wartoœæ sygna³u) oraz czy istnieje droga wolna w jakimkolwiek kierunku (niska wartoœæ sygna³u na dowolnym wyjœciu).
 Zadaniem sieci jednowarstwowej z liniow¹ funkcj¹ aktywacji bêdzie okreœlenie bezpiecznej strefy wokó³ pojazdu - czyli najmniejszej odleg³oœci do przeszkody
+
+2. Implementacja regu³y delta dla funkcji nieliniowej i algorytmu wstecznej propagacji pozwalaj¹cej wykorzystaæ sieæ wielowarstwow¹. wygenerowanie nowego zbioru ucz¹cego reprezentuj¹ce odczyty z pojazdu znajduj¹cego siê w "tunelu". Sieæ bêdzie mia³a za zadanie okreœliæ k¹t, o jaki powinien siê obróciæ
+pojazd (<-1,1>, gdzie +/-1 oznacza +/- 90 stopni) aby byæ ustawionym wzd³u¿ tunelu. Tunel zawsze jest prosty i posiada dwa wyloty, jednak mo¿e mieæ nieznacznie ró¿n¹ szerokoœæ.
