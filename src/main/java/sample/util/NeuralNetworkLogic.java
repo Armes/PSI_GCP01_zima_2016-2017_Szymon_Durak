@@ -2,10 +2,7 @@ package sample.util;
 
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
-import sample.networks.NetworkError;
-import sample.networks.NeuralNetwork;
-import sample.networks.Perceptron;
-import sample.networks.UnilayerNetwork;
+import sample.networks.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -49,6 +46,7 @@ public class NeuralNetworkLogic {
                     errors.add(error);
                 }
                 results.add(new Pair<>(networks[i],errors));
+                System.out.println(String.format("Network %d is done",i));
             }
             results.sort((o1, o2) -> {
                 List<NetworkError[]> l1=o1.getValue(),l2=o2.getValue();
@@ -223,5 +221,22 @@ public class NeuralNetworkLogic {
             return results;
         });
 
+    }
+
+    public void runAsBackpropagating(NeuronSettings settings) throws Exception {
+        this.networks = new MultilayerNetwork[settings.numberOfNeurons];
+        for (int i = 0; i < settings.numberOfNeurons; i++) {
+            Integer[] init = {16,8,4,2,1};
+            this.networks[i]=new MultilayerNetwork(init);
+        }
+        runLearning(settings,(array)->{
+            Double[] results=new Double[1];
+            results[0]=0.;
+            for (int i = 0; i < array.length; i++) {
+                results[0]=results[0]<array[i]?array[i]:results[0];
+            }
+            results[0]=results[0]<=0.65?0.:1.;
+            return results;
+        });
     }
 }

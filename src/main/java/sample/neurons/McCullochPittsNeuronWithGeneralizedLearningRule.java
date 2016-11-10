@@ -9,7 +9,7 @@ public class McCullochPittsNeuronWithGeneralizedLearningRule extends McCullochPi
         super();
     }
     @Override
-    protected Double activationFunction(Double signal) {
+    protected double activationFunction(Double signal) {
         return signal;
         //return signal<0.?0.:signal>1.?1.:signal;
     }

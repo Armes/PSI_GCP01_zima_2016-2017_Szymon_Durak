@@ -49,6 +49,8 @@
                </toggleGroup>
             </RadioButton>
             <RadioButton fx:id="mccullochRatio" mnemonicParsing="false" text="Zad 1 - McCulloch" toggleGroup="$tasks" />
+            <RadioButton fx:id="backpropagationRatio" mnemonicParsing="false" text="Zad 2 - Sieć wielowarstwowa z algorytmem propagacji wstecznej" toggleGroup="$tasks">
+            </RadioButton>
          </children>
       </VBox>
    </children>

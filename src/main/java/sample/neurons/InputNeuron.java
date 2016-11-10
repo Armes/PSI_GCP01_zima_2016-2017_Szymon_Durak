@@ -1,7 +1,5 @@
 package sample.neurons;
 
-import java.io.InputStream;
-
 /**
  * Created by Szymon on 08.10.2016.
  */
@@ -25,7 +23,7 @@ public class InputNeuron extends Neuron {
         lastSignal=inputValues[neuronIndex];
     }
     @Override
-    protected Double activationFunction(Double signal) {
+    protected double activationFunction(Double signal) {
         return signal;
     }
 

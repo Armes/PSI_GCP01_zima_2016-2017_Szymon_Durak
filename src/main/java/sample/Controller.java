@@ -28,6 +28,7 @@ public class Controller implements Initializable{
     public RadioButton perceptronRadio;
     public ToggleGroup tasks;
     public RadioButton mccullochRatio;
+    public RadioButton backpropagationRatio;
     @FXML
     private Button runButton;
     @FXML
@@ -65,6 +66,8 @@ public class Controller implements Initializable{
                 neuralNetworkLogic.runAsPerceptron(getSettings());
             if (tasks.getSelectedToggle().equals(mccullochRatio))
                 neuralNetworkLogic.runAsMcCulloch(getSettings());
+            if (tasks.getSelectedToggle().equals(backpropagationRatio))
+                neuralNetworkLogic.runAsBackpropagating(getSettings());
         }
         catch (Exception ignored)
         {

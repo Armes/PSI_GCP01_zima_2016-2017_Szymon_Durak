@@ -5,7 +5,7 @@ package sample.neurons;
  */
 public class McCullochPittsNeuron extends Neuron {
     @Override
-    protected Double activationFunction(Double signal) {
+    protected double activationFunction(Double signal) {
         return signal>0.?1.:0.;
     }
     public McCullochPittsNeuron(){

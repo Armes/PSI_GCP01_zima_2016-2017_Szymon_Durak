@@ -15,4 +15,4 @@ Zadaniem perceptronu bêdzie okreœlenie czy zasz³a kolizja z przeszkod¹ z dowolne
 Zadaniem sieci jednowarstwowej z liniow¹ funkcj¹ aktywacji bêdzie okreœlenie bezpiecznej strefy wokó³ pojazdu - czyli najmniejszej odleg³oœci do przeszkody
 
 2. Implementacja regu³y delta dla funkcji nieliniowej i algorytmu wstecznej propagacji pozwalaj¹cej wykorzystaæ sieæ wielowarstwow¹. wygenerowanie nowego zbioru ucz¹cego reprezentuj¹ce odczyty z pojazdu znajduj¹cego siê w "tunelu". Sieæ bêdzie mia³a za zadanie okreœliæ k¹t, o jaki powinien siê obróciæ
-pojazd (<-1,1>, gdzie +/-1 oznacza +/- 90 stopni) aby byæ ustawionym wzd³u¿ tunelu. Tunel zawsze jest prosty i posiada dwa wyloty, jednak mo¿e mieæ nieznacznie ró¿n¹ szerokoœæ.
+pojazd (<-1,1>, gdzie +/-1 oznacza +/- 90 stopni) aby byæ ustawionym wzd³u¿ tunelu i móc jechaæ. Tunel zawsze jest prosty i posiada dwa wyloty, jednak mo¿e mieæ nieznacznie ró¿n¹ szerokoœæ.
