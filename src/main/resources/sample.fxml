@@ -21,9 +21,6 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Button id="generateDataButton" fx:id="generateDataButton" mnemonicParsing="false" onAction="#generateData" text="Generuj zbiór uczący" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-      <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#loadData" text="Załaduj zbiór uczący" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <Button fx:id="runButton" mnemonicParsing="false" onAction="#run" text="Uruchom" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
             <Slider fx:id="numberOfEpochsSlider" majorTickUnit="10.0" max="500.0" min="10.0" minorTickCount="0" showTickLabels="true" snapToTicks="true" value="100.0" />
@@ -51,6 +48,14 @@
             <RadioButton fx:id="mccullochRatio" mnemonicParsing="false" text="Zad 1 - McCulloch" toggleGroup="$tasks" />
             <RadioButton fx:id="backpropagationRatio" mnemonicParsing="false" text="Zad 2 - Sieć wielowarstwowa z algorytmem propagacji wstecznej" toggleGroup="$tasks">
             </RadioButton>
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Button fx:id="runButton" mnemonicParsing="false" onAction="#run" text="Uruchom" />
+            <Button fx:id="loadDataButton" mnemonicParsing="false" onAction="#loadData" text="Załaduj zbiór uczący" />
+            <Button id="generateDataButton" fx:id="generateDataButton" mnemonicParsing="false" onAction="#generateData" text="Generuj zbiór uczący" />
+            <Button id="generateDataButton" fx:id="generateTunnelDataButton1" mnemonicParsing="false" onAction="#generateTunnelData" text="Generuj zbiór uczący - tunel" />
          </children>
       </VBox>
    </children>

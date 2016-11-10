@@ -8,7 +8,7 @@ import java.util.Random;
  * Created by Szymon on 06.10.2016.
  */
 public abstract class Neuron {
-    public static final Double LEARNING_RATE=1e-4;
+    public static final Double LEARNING_RATE=1e-5;
     public Connection[] connections;
     public double constant =new Random().nextGaussian();
     protected Double lastSignal;

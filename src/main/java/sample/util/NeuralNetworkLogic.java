@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 
 /**
@@ -38,15 +40,30 @@ public class NeuralNetworkLogic {
         File bestNeuronFile=new File(directory,"BestNeuron.txt");
         List<Pair<NeuralNetwork,List<NetworkError[]>>> results=new LinkedList<>();
         try {
-            for (int i = 0; i < settings.numberOfNeurons; i++) {
-                List<NetworkError[]> errors=new LinkedList<>();
-                for(int j=0;j<settings.numberOfEpochs;j++){
-                    Collections.shuffle(data);
-                    NetworkError[] error=performCycles(settings,i);
-                    errors.add(error);
+            LinkedList<Thread> threads=new LinkedList<>();
+            List<Pair<NeuralNetwork, List<NetworkError[]>>> finalResults = results;
+                for (int i = 0, top = Runtime.getRuntime().availableProcessors(); i < top; i++) {
+                    int finalI = i;
+                    Thread t=new Thread(()-> {
+                    for (int j = finalI; j < settings.numberOfNeurons; j += top) {
+                        List<NetworkError[]> errors = new LinkedList<>();
+                        for (int k = 0; k < settings.numberOfEpochs; k++) {
+                            Collections.shuffle(data);
+                            NetworkError[] error = performCycles(settings, j);
+                            errors.add(error);
+                        }
+                        synchronized (finalResults) {
+                            finalResults.add(new Pair<>(networks[j], errors));
+                            System.out.println(String.format("Network %d is done", j));
+                        }
+                    }
+                    });
+                    t.start();
+                    threads.add(t);
                 }
-                results.add(new Pair<>(networks[i],errors));
-                System.out.println(String.format("Network %d is done",i));
+            for (Thread t :
+                    threads) {
+                t.join();
             }
             results.sort((o1, o2) -> {
                 List<NetworkError[]> l1=o1.getValue(),l2=o2.getValue();
@@ -226,16 +243,12 @@ public class NeuralNetworkLogic {
     public void runAsBackpropagating(NeuronSettings settings) throws Exception {
         this.networks = new MultilayerNetwork[settings.numberOfNeurons];
         for (int i = 0; i < settings.numberOfNeurons; i++) {
-            Integer[] init = {16,8,4,2,1};
+            Integer[] init = {16,32,16,8,4,1};
             this.networks[i]=new MultilayerNetwork(init);
         }
         runLearning(settings,(array)->{
             Double[] results=new Double[1];
-            results[0]=0.;
-            for (int i = 0; i < array.length; i++) {
-                results[0]=results[0]<array[i]?array[i]:results[0];
-            }
-            results[0]=results[0]<=0.65?0.:1.;
+            results[0]=array[array.length-1];
             return results;
         });
     }

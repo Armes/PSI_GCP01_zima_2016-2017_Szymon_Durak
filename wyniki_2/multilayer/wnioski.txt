@@ -1,0 +1,17 @@
+Liczba neuronów w warstwach:
+Wejœciowej: 16
+Ukrytych: 32, 16, 8, 4
+Wyjœciowej: 1
+
+Liczba uczonych sieci: 30
+Liczba epok: 500
+
+Wnioski:
+Zastosowanie wielowarstwowej sieci neuronowej opartej o neurony z funkcj¹ aktywacji tangens hiperboliczny pozwoli³o umiarkowanie
+skutecznie nauczyæ sieæ neuronow¹ okreœlania kierunku, w którym skierowany jest tunel.
+
+Dla porównania przeprowadzono uczenie na dwóch zbiorach danych: w pierwszym k¹t, pod którym obrócony by³ pojazd
+mieœci³ siê w przedziale <-90,90>, zaœ w drugim <-67.5,67.5>. O ile dla pierwszego przypadku najlepszy uzyskany
+b³¹d MSE to ok. 0,025, zaœ MAPE ok. 40%, o tyle w drugim przypadku uzyskujemy b³êdy odpowiednio 0,0025 i 20%,
+co sugeruje, ¿e obrót o k¹t bliski +/-90 stopni sprawia sieci spore problemy - trudno wówczas okreœliæ,
+czy pojazd powinien obróciæ siê w prawo, czy w lewo, co generuje niepotrzebnie b³êdy.

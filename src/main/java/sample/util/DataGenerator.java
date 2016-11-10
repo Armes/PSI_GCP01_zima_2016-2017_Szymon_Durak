@@ -15,8 +15,14 @@ import java.util.function.Function;
  */
 public class DataGenerator {
     File saveFile;
-    private List<Function<Boolean,DataSet>> expressions; //Function that accepts single Double parameter and returns 3 Double coordinates.
-    private Random random;
+    protected List<Function<Boolean,DataSet>> expressions; //Function that accepts single Double parameter and returns 3 Double coordinates.
+    protected Random random;
+
+    public DataGenerator() {
+        random=new Random();
+        expressions=new ArrayList<>();
+    }
+
     Double AND(Double a,Double b)
     {
         return a*b;
@@ -48,76 +54,6 @@ public class DataGenerator {
             for (int i = 0, inputsLength = inputs.length; i < inputsLength; i++) {
                 inputs[i] = random.nextDouble();
             }
-            //set.outputs[0]=AND(
-            //        OR(
-            //                OR(
-            //                        AND(
-            //                                set.inputs[0],
-            //                                0.7
-            //                        ),
-            //                        set.inputs[1]
-            //                ),
-            //                OR(
-            //                        set.inputs[2],
-            //                        NOT(set.inputs[3]
-            //                        )
-            //                )
-            //        ),
-            //        EQ(
-            //                NOT(
-            //                        OR(
-            //                                set.inputs[5],
-            //                                AND(
-            //                                        set.inputs[4],
-            //                                        0.5
-            //                                )
-            //                        )
-            //                ),
-            //                OR(
-            //                        set.inputs[7],
-            //                        AND(
-            //                                set.inputs[6],
-            //                                0.5
-            //                        )
-            //                )
-            //
-            //        )
-            //);
-            //set.outputs[1]=AND(
-            //        OR(
-            //                OR(
-            //                        AND(
-            //                                set.inputs[1],
-            //                                0.7
-            //                        ),
-            //                        set.inputs[0]
-            //                ),
-            //                OR(
-            //                        set.inputs[3],
-            //                        NOT(set.inputs[2]
-            //                        )
-            //                )
-            //        ),
-            //        EQ(
-            //                NOT(
-            //                        OR(
-            //                                set.inputs[4],
-            //                                AND(
-            //                                        set.inputs[5],
-            //                                        0.5
-            //                                )
-            //                        )
-            //                ),
-            //                OR(
-            //                        set.inputs[6],
-            //                        AND(
-            //                                set.inputs[7],
-            //                                0.5
-            //                        )
-            //                )
-            //
-            //        )
-            //);
             return set;
         });
     }

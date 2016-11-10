@@ -10,6 +10,7 @@ import sample.networks.NeuralNetwork;
 import sample.util.DataGenerator;
 import sample.util.NeuralNetworkLogic;
 import sample.util.NeuronSettings;
+import sample.util.TunnelDataGenerator;
 
 import java.io.File;
 import java.net.URL;
@@ -29,6 +30,7 @@ public class Controller implements Initializable{
     public ToggleGroup tasks;
     public RadioButton mccullochRatio;
     public RadioButton backpropagationRatio;
+    public Button generateTunnelDataButton1;
     @FXML
     private Button runButton;
     @FXML
@@ -88,5 +90,12 @@ public class Controller implements Initializable{
         FileChooser chooser=new FileChooser();
         targetFile = chooser.showOpenDialog(null);
         neuralNetworkLogic.loadData(targetFile);
+    }
+
+    public void generateTunnelData(ActionEvent actionEvent) {
+        FileChooser chooser=new FileChooser();
+        File saveFile = chooser.showSaveDialog(null);
+        DataGenerator dataGenerator=new TunnelDataGenerator(saveFile);
+        dataGenerator.generateAndSave();
     }
 }
