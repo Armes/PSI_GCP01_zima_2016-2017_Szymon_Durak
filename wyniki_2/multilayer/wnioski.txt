@@ -14,4 +14,4 @@ Dla porównania przeprowadzono uczenie na dwóch zbiorach danych: w pierwszym k¹t,
 mieœci³ siê w przedziale <-90,90>, zaœ w drugim <-67.5,67.5>. O ile dla pierwszego przypadku najlepszy uzyskany
 b³¹d MSE to ok. 0,025, zaœ MAPE ok. 40%, o tyle w drugim przypadku uzyskujemy b³êdy odpowiednio 0,0025 i 20%,
 co sugeruje, ¿e obrót o k¹t bliski +/-90 stopni sprawia sieci spore problemy - trudno wówczas okreœliæ,
-czy pojazd powinien obróciæ siê w prawo, czy w lewo, co generuje niepotrzebnie b³êdy.
+czy pojazd powinien obróciæ siê w prawo, czy w lewo, co w du¿ej mierze przyczynia siê do powstawania b³êdów.
