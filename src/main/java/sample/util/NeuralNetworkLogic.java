@@ -37,24 +37,34 @@ public class NeuralNetworkLogic {
         File directory = new DirectoryChooser().showDialog(null);
         File mseFile=new File(directory,"MSE.txt");
         File mapeFile=new File(directory,"MAPE.txt");
+        File timeFile=new File(directory,"TIME.txt");
         File bestNeuronFile=new File(directory,"BestNeuron.txt");
         List<Pair<NeuralNetwork,List<NetworkError[]>>> results=new LinkedList<>();
+        List<Pair<NeuralNetwork,List<Double>>> time=new LinkedList<>();
         try {
             LinkedList<Thread> threads=new LinkedList<>();
             List<Pair<NeuralNetwork, List<NetworkError[]>>> finalResults = results;
+            List<Pair<NeuralNetwork, List<Double>>> finalTime = time;
                 for (int i = 0, top = Runtime.getRuntime().availableProcessors(); i < top; i++) {
                     int finalI = i;
                     Thread t=new Thread(()-> {
                     for (int j = finalI; j < settings.numberOfNeurons; j += top) {
                         List<NetworkError[]> errors = new LinkedList<>();
+                        List<Double> zeit=new LinkedList<>();
                         for (int k = 0; k < settings.numberOfEpochs; k++) {
+                            double tElapsed=System.nanoTime();
                             Collections.shuffle(data);
                             NetworkError[] error = performCycles(settings, j);
+                            tElapsed=(System.nanoTime()-tElapsed)/1000000000.;
                             errors.add(error);
+                            zeit.add(tElapsed);
                         }
                         synchronized (finalResults) {
                             finalResults.add(new Pair<>(networks[j], errors));
                             System.out.println(String.format("Network %d is done", j));
+                        }
+                        synchronized (finalTime){
+                            finalTime.add(new Pair<>(networks[j],zeit));
                         }
                     }
                     });
@@ -79,6 +89,7 @@ public class NeuralNetworkLogic {
             results=results.subList(0,settings.maxNeuronsOnCharts);
             writeMSEChartsFor(results,mseFile);
             writeMAPEChartsFor(results,mapeFile);
+            writeTimeFor(time,timeFile);
             writeBestNeuron(results.get(0).getKey(),bestNeuronFile);
 
         } catch (Exception e) {
@@ -90,6 +101,34 @@ public class NeuralNetworkLogic {
         data=null;
 
     }
+
+    private void writeTimeFor(List<Pair<NeuralNetwork, List<Double>>> time, File timeFile) throws IOException {
+        timeFile.createNewFile();
+        FileWriter writer = new FileWriter(timeFile);
+        BufferedWriter bufferedWriter=new BufferedWriter(writer);
+        time.forEach(neuralNetworkListPair -> {
+            try{
+                bufferedWriter.write("Neuron "+time.indexOf(neuralNetworkListPair)+" Epochs time;");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            neuralNetworkListPair.getValue().forEach(record -> {
+                try {
+                    bufferedWriter.write(String.format("%3.6f;", record));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            try {
+                bufferedWriter.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        bufferedWriter.close();
+
+    }
+
     public void runAsPerceptron(NeuronSettings settings)throws Exception{
         this.networks = new Perceptron[settings.numberOfNeurons];
         for (int i = 0; i < settings.numberOfNeurons; i++) {
