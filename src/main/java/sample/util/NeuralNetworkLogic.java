@@ -243,7 +243,7 @@ public class NeuralNetworkLogic {
     public void runAsBackpropagating(NeuronSettings settings) throws Exception {
         this.networks = new MultilayerNetwork[settings.numberOfNeurons];
         for (int i = 0; i < settings.numberOfNeurons; i++) {
-            Integer[] init = {16,32,16,8,4,1};
+            Integer[] init = {16,64,16,1};
             this.networks[i]=new MultilayerNetwork(init);
         }
         runLearning(settings,(array)->{
