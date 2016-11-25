@@ -17,7 +17,7 @@ public class GroupingDataGenerator extends DataGenerator {
             set.inputs[17]=-1.;
             set.inputs[18]=-1.;
             tunnelTurn*=Math.PI*10./180.;
-            for (int i = 0; i < set.inputs.length - 1; i++) {
+            for (int i = 0; i < set.inputs.length - 3; i++) {
                 double signal=tunnelSpan/(Math.abs(Math.sin(angleStep*(double)i - tunnelTurn))+1e-6);
                 set.inputs[i]=signal>1.?0.:(1.-signal);
             }
@@ -31,8 +31,8 @@ public class GroupingDataGenerator extends DataGenerator {
             set.inputs[16]=-1.;
             set.inputs[17]=1.;
             set.inputs[18]=-1.;
-            wallOrientation*=angleStep;
-            for (int i = 0; i < set.inputs.length - 1; i++) {
+            wallOrientation*=.5*angleStep;
+            for (int i = 0; i < set.inputs.length - 3; i++) {
                 double sin=Math.sin(angleStep*(double)i - wallOrientation);
                 double signal=wallDistance/(Math.abs(Math.sin(angleStep*(double)i - wallOrientation))+1e-6);
                 set.inputs[i]=signal>1.||sin<0?0.:(1.-signal);
@@ -45,11 +45,11 @@ public class GroupingDataGenerator extends DataGenerator {
             double wallDistance=0.4+random.nextDouble()*.3;
             double wallOrientation=-2.*random.nextDouble();
             set.inputs[16]=-1.;
-            set.inputs[17]=1.;
-            set.inputs[18]=-1.;
-            wallOrientation*=1.*angleStep;
+            set.inputs[17]=-1.;
+            set.inputs[18]=1.;
+            wallOrientation*=.5*angleStep;
             wallOrientation+=Math.PI;
-            for (int i = 0; i < set.inputs.length - 1; i++) {
+            for (int i = 0; i < set.inputs.length - 3; i++) {
                 double sin=Math.sin(angleStep*(double)i - wallOrientation);
                 double signal=wallDistance/(Math.abs(Math.sin(angleStep*(double)i - wallOrientation))+1e-6);
                 set.inputs[i]=signal>1.||sin<0?0.:(1.-signal);

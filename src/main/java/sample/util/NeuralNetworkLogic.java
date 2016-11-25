@@ -78,13 +78,14 @@ public class NeuralNetworkLogic {
             results.sort((o1, o2) -> {
                 List<NetworkError[]> l1=o1.getValue(),l2=o2.getValue();
                 NetworkError[] e1=l1.get(l1.size()-1), e2=l2.get(l2.size()-1);
-                double result=e1[1].getMSE()-e2[1].getMSE();
-                if(result>0.)
+                double mse1=e1[1].getMSE();
+                double mse2=e2[1].getMSE();
+                if(mse1>mse2)
                     return 1;
-                else if(result==0.)
-                    return 0;
-                else
+                else if(mse1<mse2)
                     return -1;
+                else
+                    return 0;
             });
             results=results.subList(0,settings.maxNeuronsOnCharts);
             writeMSEChartsFor(results,mseFile);
@@ -295,7 +296,7 @@ public class NeuralNetworkLogic {
     public void runAsHebbLearning(NeuronSettings settings, boolean supervised, boolean forgetting) throws Exception {
         this.networks = new GroupingNetwork[settings.numberOfNeurons];
         for (int i = 0; i < settings.numberOfNeurons; i++) {
-            Integer[] init = {16,3};
+            Integer[] init = {16,8,3};
             this.networks[i]=new GroupingNetwork(init,supervised,forgetting);
         }
         runLearning(settings,(array)->{
