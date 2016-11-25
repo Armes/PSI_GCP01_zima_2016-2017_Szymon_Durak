@@ -66,10 +66,10 @@ public class DataGenerator {
             List<DataSet> results=new LinkedList<>();
             for(Function<Boolean,DataSet> expression:expressions)
             {
-                int size=10000;
+                int size=10000/expressions.size();
                 for(int i=0;i<size;i++)
                 {
-                    results.add(expression.apply(i<size/10));
+                    results.add(expression.apply(false));
                 }
             }
             String output=gson.toJson(results);

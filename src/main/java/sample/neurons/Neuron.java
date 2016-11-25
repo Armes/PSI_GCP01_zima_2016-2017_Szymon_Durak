@@ -43,6 +43,8 @@ public abstract class Neuron {
             connections[i]=new Connection(neurons[i]);
         }
     }
+
+
     public class Connection{
         public Neuron inputNeuron;
         public Double inputWeight;

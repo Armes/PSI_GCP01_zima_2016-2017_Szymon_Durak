@@ -7,10 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import sample.networks.NeuralNetwork;
-import sample.util.DataGenerator;
-import sample.util.NeuralNetworkLogic;
-import sample.util.NeuronSettings;
-import sample.util.TunnelDataGenerator;
+import sample.util.*;
 
 import java.io.File;
 import java.net.URL;
@@ -31,6 +28,10 @@ public class Controller implements Initializable{
     public RadioButton mccullochRatio;
     public RadioButton backpropagationRatio;
     public Button generateTunnelDataButton1;
+    public Button generateHebbDataButton;
+    public RadioButton hebbRadio;
+    public CheckBox supervisedCheckbox;
+    public CheckBox forgettingCheckbox;
     @FXML
     private Button runButton;
     @FXML
@@ -70,6 +71,8 @@ public class Controller implements Initializable{
                 neuralNetworkLogic.runAsMcCulloch(getSettings());
             if (tasks.getSelectedToggle().equals(backpropagationRatio))
                 neuralNetworkLogic.runAsBackpropagating(getSettings());
+            if (tasks.getSelectedToggle().equals(hebbRadio))
+                neuralNetworkLogic.runAsHebbLearning(getSettings(),supervisedCheckbox.isSelected(),forgettingCheckbox.isSelected());
         }
         catch (Exception ignored)
         {
@@ -96,6 +99,13 @@ public class Controller implements Initializable{
         FileChooser chooser=new FileChooser();
         File saveFile = chooser.showSaveDialog(null);
         DataGenerator dataGenerator=new TunnelDataGenerator(saveFile);
+        dataGenerator.generateAndSave();
+    }
+
+    public void generateHebbData(ActionEvent actionEvent) {
+        FileChooser chooser=new FileChooser();
+        File saveFile = chooser.showSaveDialog(null);
+        DataGenerator dataGenerator=new GroupingDataGenerator(saveFile);
         dataGenerator.generateAndSave();
     }
 }

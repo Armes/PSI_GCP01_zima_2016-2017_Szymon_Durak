@@ -11,7 +11,8 @@ import java.util.List;
 public abstract class NeuralNetwork<NetworkType extends Neuron> {
     InputLayer inputLayer;
     Layer[] innerLayers;
-    
+    protected NeuralNetwork(){
+    }
     public NeuralNetwork(Integer[] layerSizes,Class<NetworkType> networkType) throws Exception {
         if(layerSizes==null||layerSizes.length<2)
             throw new Exception("Invalid layers");

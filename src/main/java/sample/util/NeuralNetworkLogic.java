@@ -291,4 +291,18 @@ public class NeuralNetworkLogic {
             return results;
         });
     }
+
+    public void runAsHebbLearning(NeuronSettings settings, boolean supervised, boolean forgetting) throws Exception {
+        this.networks = new GroupingNetwork[settings.numberOfNeurons];
+        for (int i = 0; i < settings.numberOfNeurons; i++) {
+            Integer[] init = {16,3};
+            this.networks[i]=new GroupingNetwork(init,supervised,forgetting);
+        }
+        runLearning(settings,(array)->{
+            Double[] results=new Double[3];
+            for(int i=0;i<results.length;i++)
+            results[i]=array[i+16];
+            return results;
+        });
+    }
 }
