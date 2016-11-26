@@ -32,6 +32,8 @@ public class Controller implements Initializable{
     public RadioButton hebbRadio;
     public CheckBox supervisedCheckbox;
     public CheckBox forgettingCheckbox;
+    public RadioButton ojiRadio;
+    public CheckBox multilayerCheckbox;
     @FXML
     private Button runButton;
     @FXML
@@ -72,7 +74,9 @@ public class Controller implements Initializable{
             if (tasks.getSelectedToggle().equals(backpropagationRatio))
                 neuralNetworkLogic.runAsBackpropagating(getSettings());
             if (tasks.getSelectedToggle().equals(hebbRadio))
-                neuralNetworkLogic.runAsHebbLearning(getSettings(),supervisedCheckbox.isSelected(),forgettingCheckbox.isSelected());
+                neuralNetworkLogic.runAsHebbLearning(getSettings(),supervisedCheckbox.isSelected(),forgettingCheckbox.isSelected(),multilayerCheckbox.isSelected());
+            if (tasks.getSelectedToggle().equals(ojiRadio))
+                neuralNetworkLogic.runAsOjiLearning(getSettings(),supervisedCheckbox.isSelected(),multilayerCheckbox.isSelected());
         }
         catch (Exception ignored)
         {
@@ -102,7 +106,7 @@ public class Controller implements Initializable{
         dataGenerator.generateAndSave();
     }
 
-    public void generateHebbData(ActionEvent actionEvent) {
+    public void generateUnsupervisedLearningData(ActionEvent actionEvent) {
         FileChooser chooser=new FileChooser();
         File saveFile = chooser.showSaveDialog(null);
         DataGenerator dataGenerator=new GroupingDataGenerator(saveFile);

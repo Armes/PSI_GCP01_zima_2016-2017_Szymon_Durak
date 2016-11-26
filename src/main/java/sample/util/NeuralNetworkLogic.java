@@ -3,6 +3,8 @@ package sample.util;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 import sample.networks.*;
+import sample.neurons.HebbNeuron;
+import sample.neurons.OjiNeuron;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -293,16 +295,41 @@ public class NeuralNetworkLogic {
         });
     }
 
-    public void runAsHebbLearning(NeuronSettings settings, boolean supervised, boolean forgetting) throws Exception {
+    public void runAsHebbLearning(NeuronSettings settings, boolean supervised, boolean forgetting, boolean multilayer) throws Exception {
         this.networks = new GroupingNetwork[settings.numberOfNeurons];
-        for (int i = 0; i < settings.numberOfNeurons; i++) {
-            Integer[] init = {16,8,3};
-            this.networks[i]=new GroupingNetwork(init,supervised,forgetting);
-        }
+        if(multilayer)
+            for (int i = 0; i < settings.numberOfNeurons; i++) {
+                Integer[] init = {16,8,3};
+                this.networks[i]=new GroupingNetwork<>(init, HebbNeuron.class,supervised,forgetting);
+            }
+        else
+            for (int i = 0; i < settings.numberOfNeurons; i++) {
+                Integer[] init = {16,3};
+                this.networks[i]=new GroupingNetwork<>(init, HebbNeuron.class,supervised,forgetting);
+            }
+
         runLearning(settings,(array)->{
             Double[] results=new Double[3];
-            for(int i=0;i<results.length;i++)
-            results[i]=array[i+16];
+            System.arraycopy(array, 16, results, 0, results.length);
+            return results;
+        });
+    }
+    public void runAsOjiLearning(NeuronSettings settings, boolean supervised, boolean multilayer) throws Exception {
+        this.networks = new GroupingNetwork[settings.numberOfNeurons];
+        if(multilayer)
+            for (int i = 0; i < settings.numberOfNeurons; i++) {
+                Integer[] init = {16,8,3};
+                this.networks[i]=new GroupingNetwork<>(init, OjiNeuron.class,supervised,false);
+            }
+        else
+            for (int i = 0; i < settings.numberOfNeurons; i++) {
+                Integer[] init = {16,3};
+                this.networks[i]=new GroupingNetwork<>(init, OjiNeuron.class,supervised,false);
+            }
+
+        runLearning(settings,(array)->{
+            Double[] results=new Double[3];
+            System.arraycopy(array, 16, results, 0, results.length);
             return results;
         });
     }

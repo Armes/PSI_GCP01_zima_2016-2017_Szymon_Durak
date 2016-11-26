@@ -12,6 +12,8 @@ public abstract class Neuron {
     public Connection[] connections;
     public double constant =new Random().nextGaussian();
     protected Double lastSignal;
+    private boolean supervised;
+    private boolean forgetting;
 
     public Double getSignal(){
         return lastSignal;
@@ -43,6 +45,7 @@ public abstract class Neuron {
             connections[i]=new Connection(neurons[i]);
         }
     }
+
 
 
     public class Connection{
