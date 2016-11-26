@@ -44,6 +44,7 @@
                <children>
                   <CheckBox fx:id="forgettingCheckbox" mnemonicParsing="false" text="Zapominanie (tylko metoda Hebba)" />
                   <CheckBox fx:id="supervisedCheckbox" mnemonicParsing="false" text="Z nauczycielem (Tylko metoda Hebba i Oji)" />
+                  <CheckBox fx:id="multilayerCheckbox" mnemonicParsing="false" text="Wariant z warstwą ukrytą (Tylko metoda Hebba i Oji)" />
                </children>
             </VBox>
          </children></VBox>
