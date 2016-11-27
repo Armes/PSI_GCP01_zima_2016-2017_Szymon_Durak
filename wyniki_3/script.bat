@@ -1,0 +1,1 @@
+for /F %x in ('dir /s/b/o MAPE.txt') do ( findstr /n . %x | findstr "^2:" >> bestResultsMAPE.txt )

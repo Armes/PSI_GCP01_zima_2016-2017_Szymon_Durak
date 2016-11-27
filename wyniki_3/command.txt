@@ -1,0 +1,92 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<pthread.h>
+
+#include"pomiar_czasu.h"
+
+#define ROZMIAR 100000000 
+#define LICZBA_W 8
+#define A -1.
+#define B 1.
+typedef struct{
+	unsigned int rozmiar;
+	double a;
+	double b;
+} dane_w;
+pthread_mutex_t muteks; 
+pthread_t watki[LICZBA_W];
+dane_w dane[LICZBA_W];
+double global_array_of_local_sums[LICZBA_W];
+
+
+void *suma_w( void *arg_wsk);
+void *suma_w_no_mutex( void *arg_wsk);
+double calka_sekw(double a,double b,unsigned int segments);
+double fun(double x);
+void* calka_dekompozycja_dziedziny(void*arg);
+double *tab;
+double suma=0; 
+int main(){
+inicjuj_czas();
+double calka=calka_sekw(A,B,ROZMIAR);
+double t_sekw=czas_zegara();
+printf("Calka liczona sekwencyjnie; %f; czas; %f\n",calka,t_sekw);
+
+// zrownoleglamy przez dekompozycje w dziedzinie problemu
+
+inicjuj_czas();
+calka=0.;
+int i;
+unsigned int l_segmentow=ROZMIAR;
+double n_a=A;
+double n_b;
+double krok=(B-A)/(double)ROZMIAR;
+for(i=0;i<LICZBA_W;i++){
+	dane[i].a=n_a;
+	unsigned int fragment=(l_segmentow+((LICZBA_W-i)/2))/(LICZBA_W-i);
+	l_segmentow-=fragment;
+	dane[i].rozmiar=fragment;
+	n_b=n_a+(dane[i].rozmiar*krok);
+	dane[i].b=n_b;
+	n_a=n_b;
+	pthread_create((watki+i),NULL,calka_dekompozycja_dziedziny,&dane[i]);
+}
+for(i=0;i<LICZBA_W;i++){
+	pthread_join(watki[i],NULL);
+}
+double t_dekom=czas_zegara();
+printf("Calka liczona z dekompozycja danych; %f; czas; %f\n",suma,t_dekom);
+}
+double calka_sekw(double a,double b,unsigned int segments){
+if(a==b|segments==0)
+return 0.;
+double x1=a;
+double x2=b;
+if(a>b){
+	x1=b;
+	x2=a;
+}
+double krok=(b-a)/(double)segments;
+double offset=a;
+double calka=0.;
+unsigned int i;
+for(i=0;i<segments;i++)
+{
+	calka+=fun(offset);
+	offset+=krok;
+	calka+=fun(offset);
+}
+calka*=0.5*krok;
+return calka;
+}
+double fun(double x){
+	return 2.+x*(3.-x*(x-1.));
+}
+void* calka_dekompozycja_dziedziny(void*arg){
+dane_w dane=*(dane_w*)arg;
+double calka=calka_sekw(dane.a,dane.b,dane.rozmiar);
+pthread_mutex_lock(&muteks);
+suma+=calka;
+pthread_mutex_unlock(&muteks);
+return NULL;
+}

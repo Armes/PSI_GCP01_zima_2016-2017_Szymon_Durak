@@ -1,0 +1,13 @@
+Dla ka¿dego z 12 rodzajów sieci przeprowadzono uczenie 100 sieci przez 200 epok ka¿da. W plikach tekstowych zachowano rezultaty po 3 najlepszych sieci, a po 1 najlepszej wykorzystano do utworzenia wykresów.
+
+WNIOSKI:
+
+- bardzo czêsto b³¹d sieci danego rodzaju zmierza do wartoœci 1,333 - oznacza to, ¿e sieæ minimalizuj¹c b³¹d zaczyna na wszystkich wyjœciach stale zwracaæ wartoœæ -1 - obserwacji tej dokonano dla a¿ 3 na 4 sieci Oji. Jeœli spojrzeæ na zestawienia najlepszych 3 wyników poszczególnych sieci, widzimy, ¿e tendencja do takiej zbie¿noœci jest doœæ powszechna.
+- spoœród 4 najlepszych wytypowanych sieci 3 by³y sieciami Hebba, a jedna Oji. Wœród nich by³y zarówno sieci nadzorowane, jak i nienadzorowane - zarówno jednowarstwowa, nadzorowana sieæ Oji jak i nienadzorowana, jednowarstwowa sieæ Hebba bez wspó³czynnika zapominania osi¹gnê³y b³¹d MSE na poziomie ok. 0,3.
+- Sieci neuronowe ze wspó³czynnikiem zapominania ca³kowicie siê nie sprawdzi³y - jedyna, która nie utknê³a w "pu³apce b³êdu 1,333" (Hebbowska, nadzorowana, jednowarstwowa) by³a od pocz¹tku do koñca bardzo niestabilna.
+- Zauwa¿alne jest wolniejsze uczenie sieci wielowarstwowych i czêstsze zatrzymanie uczenia na b³êdzie 1,33
+- Przebieg uczenia sieci w przypadku sieci Hebba i Oji silnie zale¿y od wektora wag pocz¹tkowych.
+- Liczba 100 sieci okaza³a siê w tej sytuacji zdecydowanie za ma³a, szczególnie dla sieci z warstw¹ ukryt¹ które mia³y znacznie wiêcej po³¹czeñ miêdzy neuronami, a zatem i wag - proces uczenia by³ tu niezwykle utrudniony, jednak ze wzglêdu na ograniczenia czasowe zrezygnowano z prób uczenia wiêkszej liczby sieci.
+- okazuje siê, ¿e uczenie nienadzorowane mo¿e daæ równie dobre wyniki co nadzorowane (Hebb nienadzorowany vs Oji nadzorowany)
+- czas uczenia sieci wielowarstwowych jest zauwa¿alnie d³u¿szy ni¿ jednowarstwowych zarówno w kontekœcie tempa uczenia na epokê, jak i up³ywu czasu.
+- w przypadku tych sieci b³êdy MAPE by³y bardzo zgodne z b³êdami MSE - najlepsze sieci, dla których MSE wynosi³ ok. 0,3, MAPE siêga³o ok. 14-15%. Dla sieci, które utknê³y w okolicy MSE=1,333, MAPE oscylowa³ wokó³ 66,7%.
