@@ -34,6 +34,8 @@ public class Controller implements Initializable{
     public CheckBox forgettingCheckbox;
     public RadioButton ojiRadio;
     public CheckBox multilayerCheckbox;
+    public RadioButton kohonenRadio;
+    public RadioButton kohonenPerceptronRadio;
     @FXML
     private Button runButton;
     @FXML
@@ -77,6 +79,10 @@ public class Controller implements Initializable{
                 neuralNetworkLogic.runAsHebbLearning(getSettings(),supervisedCheckbox.isSelected(),forgettingCheckbox.isSelected(),multilayerCheckbox.isSelected());
             if (tasks.getSelectedToggle().equals(ojiRadio))
                 neuralNetworkLogic.runAsOjiLearning(getSettings(),supervisedCheckbox.isSelected(),multilayerCheckbox.isSelected());
+            if(tasks.getSelectedToggle().equals(kohonenRadio))
+                neuralNetworkLogic.runAsKohonenClassifier(getSettings());
+            if(tasks.getSelectedToggle().equals(kohonenPerceptronRadio))
+                neuralNetworkLogic.runClassifiedPerceptronLearning(getSettings());
         }
         catch (Exception ignored)
         {

@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Function;
 
 /**
@@ -34,7 +32,7 @@ public class NeuralNetworkLogic {
         this.dataReader.readFile();
         this.data=this.dataReader.getData();
     }
-    public void runLearning(NeuronSettings settings,Function<Double[], Double[]> outputExpr){
+    public NeuralNetwork runLearning(NeuronSettings settings, Function<Double[], Double[]> outputExpr){
         this.outputExpr=outputExpr;
         File directory = new DirectoryChooser().showDialog(null);
         File mseFile=new File(directory,"MSE.txt");
@@ -44,13 +42,14 @@ public class NeuralNetworkLogic {
         List<Pair<NeuralNetwork,List<NetworkError[]>>> results=new LinkedList<>();
         List<Pair<NeuralNetwork,List<Double>>> time=new LinkedList<>();
         try {
+            System.out.println(String.format("%d Networks begin learning on size %d dataset",this.networks.length,this.data.size()));
             LinkedList<Thread> threads=new LinkedList<>();
             List<Pair<NeuralNetwork, List<NetworkError[]>>> finalResults = results;
             List<Pair<NeuralNetwork, List<Double>>> finalTime = time;
                 for (int i = 0, top = Runtime.getRuntime().availableProcessors(); i < top; i++) {
                     int finalI = i;
                     Thread t=new Thread(()-> {
-                    for (int j = finalI; j < settings.numberOfNeurons; j += top) {
+                    for (int j = finalI; j < networks.length; j += top) {
                         List<NetworkError[]> errors = new LinkedList<>();
                         List<Double> zeit=new LinkedList<>();
                         for (int k = 0; k < settings.numberOfEpochs; k++) {
@@ -63,7 +62,6 @@ public class NeuralNetworkLogic {
                         }
                         synchronized (finalResults) {
                             finalResults.add(new Pair<>(networks[j], errors));
-                            System.out.println(String.format("Network %d is done", j));
                         }
                         synchronized (finalTime){
                             finalTime.add(new Pair<>(networks[j],zeit));
@@ -77,6 +75,7 @@ public class NeuralNetworkLogic {
                     threads) {
                 t.join();
             }
+            System.out.println("Networks finished learning");
             results.sort((o1, o2) -> {
                 List<NetworkError[]> l1=o1.getValue(),l2=o2.getValue();
                 NetworkError[] e1=l1.get(l1.size()-1), e2=l2.get(l2.size()-1);
@@ -98,11 +97,11 @@ public class NeuralNetworkLogic {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        NeuralNetwork bestNetwork=results.get(0).getKey();
         results=null;
         networks=null;
         bestNeuronFile=null;
-        data=null;
-
+        return bestNetwork;
     }
 
     private void writeTimeFor(List<Pair<NeuralNetwork, List<Double>>> time, File timeFile) throws IOException {
@@ -251,7 +250,8 @@ public class NeuralNetworkLogic {
             learningSet){
                 Double[] input=set.inputs;
                 Double[] output=outputExpr.apply(input);
-                trainingErrorList.add(networks[neuronIndex].learn(input,output));
+                NetworkError err=networks[neuronIndex].learn(input,output);
+                trainingErrorList.add(err);
             }
         }
         List<NetworkError> networkErrorList=new LinkedList<>();
@@ -332,5 +332,76 @@ public class NeuralNetworkLogic {
             System.arraycopy(array, 16, results, 0, results.length);
             return results;
         });
+    }
+
+    public void runAsKohonenClassifier(NeuronSettings settings) throws Exception {
+        this.networks = new KohonenNetwork[settings.numberOfNeurons];
+            for (int i = 0; i < settings.numberOfNeurons; i++) {
+                this.networks[i]=new KohonenNetwork(16,3);
+            }
+
+        runLearning(settings,(array)->{
+            Double[] results=new Double[3];
+            System.arraycopy(array, 16, results, 0, results.length);
+            return results;
+        });
+    }
+
+    public void runClassifiedPerceptronLearning(NeuronSettings settings) throws Exception {
+        this.networks = new KohonenNetwork[500];
+        for (int i = 0; i < this.networks.length; i++) {
+            this.networks[i]=new KohonenNetwork(16,3);
+        }
+
+        NeuralNetwork classifier=runLearning(settings,(array)->{
+            Double[] results=new Double[3];
+            System.arraycopy(array, 16, results, 0, results.length);
+            return results;
+        });
+        List<NeuralNetwork> winnerNetworks=new LinkedList<>();
+        this.networks=new UnilayerNetwork[settings.numberOfNeurons];
+        for (int i = 0; i < this.networks.length; i++) {
+            this.networks[i]=new UnilayerNetwork(16,1);
+        }
+        extendWinnerList(settings,winnerNetworks);
+        List<DataSet>[] classifiedData=classify(classifier);
+        for (List<DataSet> setList :
+                classifiedData) {
+            this.networks=new UnilayerNetwork[settings.numberOfNeurons];
+            for (int i = 0; i < this.networks.length; i++) {
+                this.networks[i]=new UnilayerNetwork(16,1);
+            }
+            this.data=setList;
+            extendWinnerList(settings,winnerNetworks);
+        }
+
+    }
+
+    private void extendWinnerList(NeuronSettings settings, List<NeuralNetwork> winnerNetworks) {
+        winnerNetworks.add(runLearning(settings,(array)->{
+            Double[] results=new Double[1];
+            results[0]=1.;
+            for (int i = 0; i < 16; i++) {
+                results[0]=results[0]>array[i]?array[i]:results[0];
+            }
+            return results;
+        }));
+    }
+
+    private List[] classify(NeuralNetwork classifier) {
+        List[] lists = new LinkedList[classifier.getOutputCount()];
+        for(int j=0;j<lists.length;j++){
+            lists[j]=new LinkedList<DataSet>();
+        }
+        for(int i=0;i<data.size();i++)
+        {
+            DataSet specData=data.get(i);
+            Double[] results=classifier.processData(specData.inputs);
+            for(int j=0;j<lists.length;j++){
+                if(results[j]>0)
+                    lists[j].add(specData);
+            }
+        }
+        return lists;
     }
 }

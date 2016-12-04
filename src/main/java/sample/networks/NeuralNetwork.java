@@ -75,6 +75,10 @@ public abstract class NeuralNetwork<NetworkType extends Neuron> {
         return error;
     }
 
+    public int getOutputCount() {
+        return innerLayers[innerLayers.length-1].neurons.length;
+    }
+
     public class Layer<Type extends Neuron>{
         protected Neuron[] neurons;
 
