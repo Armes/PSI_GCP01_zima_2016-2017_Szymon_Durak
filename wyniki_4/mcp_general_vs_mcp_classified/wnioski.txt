@@ -1,0 +1,3 @@
+- podzia³ danych wejœciowych na klasy pozwoli³ uzyskaæ nieco dok³adniejsze (nieco zmala³ b³¹d MSE) wyniki dla zadania wyznaczania odleg³oœci dla najbli¿szej przeszkody dla sieci MCP.
+- o sieci Kohonena nie mo¿na powiedzieæ, by siê uczy³a b¹dŸ przeucza³a - b³¹d przez wszystkie epoki oscyluje wokó³ pewnego poziomu, zale¿nego prawdopodobnie od pocz¹tkowych wag.
+- zasada WTA sprawia, ¿e nie zachodzi klasyfikowanie do wielu lub ¿adnej z klas, jak to mia³o miejsce w przypadku uczenia metod¹ Hebba.
