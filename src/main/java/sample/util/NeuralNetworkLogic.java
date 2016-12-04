@@ -308,11 +308,15 @@ public class NeuralNetworkLogic {
                 this.networks[i]=new GroupingNetwork<>(init, HebbNeuron.class,supervised,forgetting);
             }
 
-        runLearning(settings,(array)->{
+        NeuralNetwork winner=runLearning(settings,(array)->{
             Double[] results=new Double[3];
             System.arraycopy(array, 16, results, 0, results.length);
             return results;
         });
+        List[]data=classify(winner);
+        for(int i=0;i<data.length;i++){
+            System.out.println(String.format("Class %d: %d elements",i,data[i].size()));
+        }
     }
     public void runAsOjiLearning(NeuronSettings settings, boolean supervised, boolean multilayer) throws Exception {
         this.networks = new GroupingNetwork[settings.numberOfNeurons];

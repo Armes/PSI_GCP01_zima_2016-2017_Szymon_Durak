@@ -1,0 +1,5 @@
+100 Networks begin learning on size 9999 dataset
+Networks finished learning
+Class 0: 6423 elements
+Class 1: 3576 elements
+Class 2: 2946 elements

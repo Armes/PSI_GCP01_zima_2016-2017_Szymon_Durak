@@ -1,0 +1,10 @@
+500 Networks begin learning on size 9999 dataset
+Networks finished learning
+30 Networks begin learning on size 9999 dataset
+Networks finished learning
+30 Networks begin learning on size 3627 dataset
+Networks finished learning
+30 Networks begin learning on size 3392 dataset
+Networks finished learning
+30 Networks begin learning on size 2980 dataset
+Networks finished learning

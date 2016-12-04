@@ -16,3 +16,7 @@ Zadaniem sieci jednowarstwowej z liniow¹ funkcj¹ aktywacji bêdzie okreœlenie bez
 
 2. Implementacja regu³y delta dla funkcji nieliniowej i algorytmu wstecznej propagacji pozwalaj¹cej wykorzystaæ sieæ wielowarstwow¹. wygenerowanie nowego zbioru ucz¹cego reprezentuj¹ce odczyty z pojazdu znajduj¹cego siê w "tunelu". Sieæ bêdzie mia³a za zadanie okreœliæ k¹t, o jaki powinien siê obróciæ
 pojazd (<-1,1>, gdzie +/-1 oznacza +/- 90 stopni) aby byæ ustawionym wzd³u¿ tunelu i móc jechaæ. Tunel zawsze jest prosty i posiada dwa wyloty, jednak mo¿e mieæ nieznacznie ró¿n¹ szerokoœæ.
+
+3. Implementacja sieci ucz¹cych siê wed³ug regu³ Hebba z zapominaniem i bez, z nadzorem i bez, jednowarstwowych i z warstw¹ ukryt¹, a tak¿e sieci dzia³aj¹cych wg. regu³y Oji. Próba sklasyfikowania danych ucz¹cych zgodnie z po¿¹danymi wzorcami - do rozró¿niania tunelu ze œcianami po bokach od œciany tylko z lewej lub z prawej
+
+4. Implementacja sieci samoorganizuj¹cej siê wg regu³y WTA, próba realizacji zadania z p.3
