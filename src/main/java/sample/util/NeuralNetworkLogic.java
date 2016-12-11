@@ -1,11 +1,17 @@
 package sample.util;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 import sample.networks.*;
 import sample.neurons.HebbNeuron;
 import sample.neurons.OjiNeuron;
 
+import javax.imageio.ImageIO;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -88,6 +94,9 @@ public class NeuralNetworkLogic {
                 else
                     return 0;
             });
+            for (int i = 0; i < networks.length; i++) {
+                networks[i]=results.get(i).getKey();
+            }
             results=results.subList(0,settings.maxNeuronsOnCharts);
             writeMSEChartsFor(results,mseFile);
             writeMAPEChartsFor(results,mapeFile);
@@ -99,7 +108,6 @@ public class NeuralNetworkLogic {
         }
         NeuralNetwork bestNetwork=results.get(0).getKey();
         results=null;
-        networks=null;
         bestNeuronFile=null;
         return bestNetwork;
     }
@@ -352,7 +360,9 @@ public class NeuralNetworkLogic {
     }
 
     public void runClassifiedPerceptronLearning(NeuronSettings settings) throws Exception {
-        this.networks = new KohonenNetwork[500];
+        List<DataSet> old=normalizeData();
+        List<DataSet> normalized=this.data;
+        this.networks = new KohonenNetwork[1];
         for (int i = 0; i < this.networks.length; i++) {
             this.networks[i]=new KohonenNetwork(16,3);
         }
@@ -379,6 +389,107 @@ public class NeuralNetworkLogic {
             extendWinnerList(settings,winnerNetworks);
         }
 
+    }
+    public void runSOMMapping(NeuronSettings settings) throws Exception {
+        List<DataSet> data=normalizeData();
+        List<DataSet> []splitted=splitData();
+        this.networks=new KohonenNetwork[10];
+        settings.numberOfNeurons=this.networks.length;
+        for (int i = 0; i < networks.length; i++) {
+            networks[i]=new KohonenNetwork(16,3);
+        }
+        runLearning(settings,(array)->{
+            Double[] results=new Double[3];
+            System.arraycopy(array, 16, results, 0, results.length);
+            return results;
+        });
+        DirectoryChooser chooser=new DirectoryChooser();
+        File file=chooser.showDialog(null);
+        for (int i = 0; i < 10; i++) {
+            visualizeMapping(networks,i,splitted,file);
+        }
+    }
+
+    private void visualizeMapping(NeuralNetwork[] networks, int j, List<DataSet>[] splitted, File file) {
+        WritableImage image=new WritableImage(100*networks[0].getOutputCount(),100);
+        PixelWriter writer=image.getPixelWriter();
+        double[][] values=new double[3][3];
+        for (int i = 0; i < 3; i++) {
+            for (int k = 0; k < 3; k++) {
+                values[i][k]=0.0;
+            }
+        }
+        //for(int i=1;i<=3;i++)
+        //{
+        //    List[] list=classify(networks[j]);
+        //    System.out.println(String.format("Network: %d; Expected classification to class %d of size %d",j,i,this.data.size()/3));
+        //    for (int k = 0; k < list.length; k++) {
+        //        int
+        //    }
+        //}
+        for(int i=0;i<splitted.length;i++)
+        {
+            this.data=splitted[i];
+            List[] list=classify(networks[j]);
+            System.out.println(String.format("Network: %d; Expected classification to class %d of size %d",j,i,splitted[i].size()));
+            for (int k = 0; k < 3; k++) {
+                System.out.println(String.format("Class %d, size %d",k,list[k].size()));
+                values[k][i]=(double)list[k].size()/(double)splitted[i].size();
+            }
+
+        }
+        Color[] colors=new Color[3];
+        for (int i = 0; i < 3; i++) {
+            colors[i]=new Color(values[i][0],values[i][1],values[i][2],1.0);
+            for (int k = 0; k < 100; k++) {
+                for (int l = 0; l < 100; l++) {
+                    writer.setColor(i*100+k,l,colors[i]);
+                }
+            }
+        }
+        String format="png";
+        File output=new File(file,"MAP_"+j+".png");
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image,null),format,output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<DataSet>[] splitData() {
+        List<DataSet>[] lists=new List[3];
+        for (int i = 0; i < 3; i++) {
+            lists[i]=new LinkedList<>();
+            for (DataSet set :
+                    this.data) {
+                if (set.inputs[i + set.inputs.length - 3] == 1)
+                    lists[i].add(set);
+            }
+        }
+        return lists;
+    }
+
+    private List<DataSet> normalizeData() {
+        List<DataSet> old=this.data;
+        this.data=new LinkedList<>();
+        for (DataSet set :
+                old) {
+            DataSet s=new DataSet(set.inputs.length);
+            double norm=0.;
+            for (int i = 0; i < s.inputs.length - 3; i++) {
+                norm+=Math.pow(set.inputs[i],2.);
+            }
+            norm=Math.sqrt(norm);
+            for (int i = 0; i < s.inputs.length - 3; i++) {
+                s.inputs[i]=set.inputs[i]/norm;
+            }
+            for (int i = s.inputs.length - 3; i < s.inputs.length; i++) {
+                s.inputs[i]=set.inputs[i];
+            }
+            this.data.add(s);
+        }
+
+        return old;
     }
 
     private void extendWinnerList(NeuronSettings settings, List<NeuralNetwork> winnerNetworks) {
@@ -408,4 +519,5 @@ public class NeuralNetworkLogic {
         }
         return lists;
     }
+
 }

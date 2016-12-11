@@ -36,6 +36,7 @@ public class Controller implements Initializable{
     public CheckBox multilayerCheckbox;
     public RadioButton kohonenRadio;
     public RadioButton kohonenPerceptronRadio;
+    public RadioButton mapRadio;
     @FXML
     private Button runButton;
     @FXML
@@ -83,6 +84,8 @@ public class Controller implements Initializable{
                 neuralNetworkLogic.runAsKohonenClassifier(getSettings());
             if(tasks.getSelectedToggle().equals(kohonenPerceptronRadio))
                 neuralNetworkLogic.runClassifiedPerceptronLearning(getSettings());
+            if(tasks.getSelectedToggle().equals(mapRadio))
+                neuralNetworkLogic.runSOMMapping(getSettings());
         }
         catch (Exception ignored)
         {

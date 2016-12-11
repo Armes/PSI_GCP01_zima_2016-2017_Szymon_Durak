@@ -62,6 +62,7 @@
             <RadioButton fx:id="ojiRadio" mnemonicParsing="false" text="Zad 3 - Sieć z uczeniem metodą Oji" toggleGroup="$tasks" />
             <RadioButton fx:id="kohonenRadio" mnemonicParsing="false" text="Zad 4 - Sieć Kohonena, typu WTA, dla zadania Hebba" toggleGroup="$tasks" />
             <RadioButton fx:id="kohonenPerceptronRadio" mnemonicParsing="false" text="Zad 4 - Sieć Kohonena, typu WTA, uczenie sieci MCP na podklasach" toggleGroup="$tasks" />
+            <RadioButton fx:id="mapRadio" mnemonicParsing="false" text="Zad 5 - Sieć Kohonena, typu WTA, generowanie mapy" toggleGroup="$tasks" />
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
