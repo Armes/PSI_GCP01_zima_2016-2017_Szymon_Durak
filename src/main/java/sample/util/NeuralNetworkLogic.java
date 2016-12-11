@@ -1,10 +1,5 @@
 package sample.util;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.util.Pair;
 import sample.networks.*;
@@ -12,6 +7,8 @@ import sample.neurons.HebbNeuron;
 import sample.neurons.OjiNeuron;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -405,18 +402,29 @@ public class NeuralNetworkLogic {
         });
         DirectoryChooser chooser=new DirectoryChooser();
         File file=chooser.showDialog(null);
+        file=new File(file,"MAPS.png");
+        BufferedImage bufferedImage=new BufferedImage(300,1000,BufferedImage.TYPE_INT_ARGB);
         for (int i = 0; i < 10; i++) {
-            visualizeMapping(networks,i,splitted,file);
+            visualizeMapping(networks,i, bufferedImage);
+        }
+        String format="png";
+        try {
+            ImageIO.write(bufferedImage,format,file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void visualizeMapping(NeuralNetwork[] networks, int j, List<DataSet>[] splitted, File file) {
-        WritableImage image=new WritableImage(100*networks[0].getOutputCount(),100);
-        PixelWriter writer=image.getPixelWriter();
-        double[][] values=new double[3][3];
+    private void visualizeMapping(NeuralNetwork[] networks, int j, BufferedImage bufferedImage) {
+        Graphics2D graphics2D=bufferedImage.createGraphics();
+        graphics2D.drawImage(bufferedImage,0,0, null);
+        graphics2D.setPaint(java.awt.Color.BLACK);
+        //WritableImage image=new WritableImage(100*networks[0].getOutputCount(),100);
+        //PixelWriter writer=image.getPixelWriter();
+        float[][] values=new float[3][3];
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
-                values[i][k]=0.0;
+                values[i][k]=0.0f;
             }
         }
         //for(int i=1;i<=3;i++)
@@ -427,33 +435,80 @@ public class NeuralNetworkLogic {
         //        int
         //    }
         //}
-        for(int i=0;i<splitted.length;i++)
-        {
-            this.data=splitted[i];
-            List[] list=classify(networks[j]);
-            System.out.println(String.format("Network: %d; Expected classification to class %d of size %d",j,i,splitted[i].size()));
+        //List[][] list=new List[3][];
+        //for(int i=0;i<3;i++)
+        //{
+        //    this.data=splitted[i];
+        //    list[i]=classify(networks[j]);
+        //    System.out.println(String.format("Network: %d; Expected classification to class %d of size %d",j,i,splitted[i].size()));
+        //    for (int k = 0; k < 3; k++) {
+        //        System.out.println(String.format("Class %d, size %d",k,list[i][k].size()));
+        //        values[k][i]+=(float)list[i][k].size()/(float)splitted[i].size();
+        //    }
+        //
+        //}
+        List[] classify=classify(networks[j]);
+        List[] splitted=splitData();
+        int[][] list=new int[3][3];
+        for (int i = 0; i < classify.length; i++) {
+            System.out.println(String.format("Network %d: Class: %d",j,i));
             for (int k = 0; k < 3; k++) {
-                System.out.println(String.format("Class %d, size %d",k,list[k].size()));
-                values[k][i]=(double)list[k].size()/(double)splitted[i].size();
-            }
-
-        }
-        Color[] colors=new Color[3];
-        for (int i = 0; i < 3; i++) {
-            colors[i]=new Color(values[i][0],values[i][1],values[i][2],1.0);
-            for (int k = 0; k < 100; k++) {
-                for (int l = 0; l < 100; l++) {
-                    writer.setColor(i*100+k,l,colors[i]);
+                list[i][k]=countClass(classify[i],k);
+                System.out.println(String.format("Defined as %d:%d",k,list[i][k]));
+                if(classify[i].size()>0){
+                    values[i][k]+=(float)list[i][k]/(float)splitted[k].size();
                 }
             }
         }
-        String format="png";
-        File output=new File(file,"MAP_"+j+".png");
-        try {
-            ImageIO.write(SwingFXUtils.fromFXImage(image,null),format,output);
-        } catch (IOException e) {
-            e.printStackTrace();
+        java.awt.Color[] colors=new java.awt.Color[3];
+        for (int i = 0; i < 3; i++) {
+            colors[i]=new java.awt.Color(values[i][0],values[i][1],values[i][2],1.0f);
+            graphics2D.setPaint(colors[i]);
+            graphics2D.fill(new java.awt.Rectangle(i*100,j*100,100,100));
+            colors[i]=new java.awt.Color(255-colors[i].getRed(),255-colors[i].getGreen(),255-colors[i].getBlue());
+            graphics2D.setPaint(colors[i]);
+            graphics2D.drawString(String.format(
+                    "Network:%d" ,j),
+                    i*100,
+                    25+j*100
+            );
+            graphics2D.drawString(String.format(
+                            "TargetClass:%d\n" ,i),
+                    i*100,
+                    40+j*100
+            );
+            graphics2D.drawString(String.format(
+                            "Class%d:%d\n" ,0,list[i][0]),
+                    i*100,
+                    55+j*100
+            );
+            graphics2D.drawString(String.format(
+                            "Class%d:%d\n",1,list[i][1]),
+                    i*100,
+                    70+j*100
+            );
+            graphics2D.drawString(String.format(
+                            "Class%d:%d\n",2,list[i][2]),
+                    i*100,
+                    85+j*100
+            );
+            //for (int k = 0; k < 100; k++) {
+            //    for (int l = 0; l < 100; l++) {
+            //        //writer.setColor(i*100+k,l,colors[i]);
+            //    }
+            //}
         }
+    }
+
+    private int countClass(List<DataSet> list, int k) {
+        int count=0;
+        for (DataSet set:list
+             ) {
+            if(set.inputs[set.inputs.length+ k - 3]==1.)
+                count++;
+
+        }
+        return count;
     }
 
     private List<DataSet>[] splitData() {
