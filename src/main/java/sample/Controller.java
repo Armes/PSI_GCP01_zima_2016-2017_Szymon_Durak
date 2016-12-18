@@ -4,9 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import sample.networks.NeuralNetwork;
 import sample.util.*;
 
 import java.io.File;
@@ -37,6 +35,8 @@ public class Controller implements Initializable{
     public RadioButton kohonenRadio;
     public RadioButton kohonenPerceptronRadio;
     public RadioButton mapRadio;
+    public RadioButton somMapRadio;
+    public Button generateSOMDataButton;
     @FXML
     private Button runButton;
     @FXML
@@ -85,6 +85,8 @@ public class Controller implements Initializable{
             if(tasks.getSelectedToggle().equals(kohonenPerceptronRadio))
                 neuralNetworkLogic.runClassifiedPerceptronLearning(getSettings());
             if(tasks.getSelectedToggle().equals(mapRadio))
+                neuralNetworkLogic.runWTAMapping(getSettings());
+            if(tasks.getSelectedToggle().equals(somMapRadio))
                 neuralNetworkLogic.runSOMMapping(getSettings());
         }
         catch (Exception ignored)
@@ -119,6 +121,13 @@ public class Controller implements Initializable{
         FileChooser chooser=new FileChooser();
         File saveFile = chooser.showSaveDialog(null);
         DataGenerator dataGenerator=new GroupingDataGenerator(saveFile);
+        dataGenerator.generateAndSave();
+    }
+
+    public void generateSOMLearningData(ActionEvent actionEvent) {
+        FileChooser chooser=new FileChooser();
+        File saveFile = chooser.showSaveDialog(null);
+        DataGenerator dataGenerator=new SOMDataGenerator(saveFile);
         dataGenerator.generateAndSave();
     }
 }

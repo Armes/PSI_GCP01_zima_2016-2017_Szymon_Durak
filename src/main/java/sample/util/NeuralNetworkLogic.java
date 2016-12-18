@@ -344,9 +344,9 @@ public class NeuralNetworkLogic {
     }
 
     public void runAsKohonenClassifier(NeuronSettings settings) throws Exception {
-        this.networks = new KohonenNetwork[settings.numberOfNeurons];
+        this.networks = new WTANetwork[settings.numberOfNeurons];
             for (int i = 0; i < settings.numberOfNeurons; i++) {
-                this.networks[i]=new KohonenNetwork(16,3);
+                this.networks[i]=new WTANetwork(16,3);
             }
 
         runLearning(settings,(array)->{
@@ -359,9 +359,9 @@ public class NeuralNetworkLogic {
     public void runClassifiedPerceptronLearning(NeuronSettings settings) throws Exception {
         List<DataSet> old=normalizeData();
         List<DataSet> normalized=this.data;
-        this.networks = new KohonenNetwork[1];
+        this.networks = new WTANetwork[1];
         for (int i = 0; i < this.networks.length; i++) {
-            this.networks[i]=new KohonenNetwork(16,3);
+            this.networks[i]=new WTANetwork(16,3);
         }
 
         NeuralNetwork classifier=runLearning(settings,(array)->{
@@ -387,13 +387,13 @@ public class NeuralNetworkLogic {
         }
 
     }
-    public void runSOMMapping(NeuronSettings settings) throws Exception {
+    public void runWTAMapping(NeuronSettings settings) throws Exception {
         List<DataSet> data=normalizeData();
         List<DataSet> []splitted=splitData();
-        this.networks=new KohonenNetwork[10];
+        this.networks=new WTANetwork[10];
         settings.numberOfNeurons=this.networks.length;
         for (int i = 0; i < networks.length; i++) {
-            networks[i]=new KohonenNetwork(16,3);
+            networks[i]=new WTANetwork(16,3);
         }
         runLearning(settings,(array)->{
             Double[] results=new Double[3];
@@ -405,7 +405,7 @@ public class NeuralNetworkLogic {
         file=new File(file,"MAPS.png");
         BufferedImage bufferedImage=new BufferedImage(300,1000,BufferedImage.TYPE_INT_ARGB);
         for (int i = 0; i < 10; i++) {
-            visualizeMapping(networks,i, bufferedImage);
+            visualizeWTAMapping(networks,i, bufferedImage);
         }
         String format="png";
         try {
@@ -414,39 +414,80 @@ public class NeuralNetworkLogic {
             e.printStackTrace();
         }
     }
+    public void runSOMMapping(NeuronSettings settings) throws Exception {
+        List<DataSet> data=normalizeData();
+        this.networks=new SOMNetwork[10];
+        settings.numberOfNeurons=this.networks.length;
+        int x=13,y=13;
+        for (int i = 0; i < networks.length; i++) {
+            networks[i]=new SOMNetwork(16,x,y);
+        }
+        runLearning(settings,(array)->{
+            Double[] fake=new Double[x*y];
+            for (int i = 0; i < fake.length; i++) {
+                fake[i]=0.;
+            }
 
-    private void visualizeMapping(NeuralNetwork[] networks, int j, BufferedImage bufferedImage) {
+            return fake;
+        });
+        DirectoryChooser chooser=new DirectoryChooser();
+        File file=chooser.showDialog(null);
+        for (int i = 0; i < 10; i++) {
+            File saveFile=new File(file,String.format("MAPS_%d.png",i));
+            BufferedImage bufferedImage=new BufferedImage(100*x,100*y,BufferedImage.TYPE_INT_ARGB);
+            visualizeSOMMapping(networks[i],bufferedImage,x,y);
+            String format="png";
+            try {
+                ImageIO.write(bufferedImage,format,saveFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void visualizeSOMMapping(NeuralNetwork network, BufferedImage bufferedImage, int x, int y) {
         Graphics2D graphics2D=bufferedImage.createGraphics();
         graphics2D.drawImage(bufferedImage,0,0, null);
         graphics2D.setPaint(java.awt.Color.BLACK);
-        //WritableImage image=new WritableImage(100*networks[0].getOutputCount(),100);
-        //PixelWriter writer=image.getPixelWriter();
+        float[] values= new float[network.getOutputCount()];
+        for (float value :
+                values) {
+            value = 0.f;
+        }
+        List[] classify=classify(network);
+        java.awt.Color[] colors=new java.awt.Color[x*y];
+        for (int i = 0; i < classify.length; i++) {
+            values[i]=(float)Math.exp(-10.f*(float)classify[i].size()/(float)this.data.size());
+            int X=i%x;
+            int Y=i/x;
+            colors[i]=new java.awt.Color(1.f-values[i],0.f,values[i],1.0f);
+            graphics2D.setPaint(colors[i]);
+            graphics2D.fill(new java.awt.Rectangle(X*100,Y*100,100,100));
+            colors[i]=new java.awt.Color(255-colors[i].getRed(),255-colors[i].getGreen(),255-colors[i].getBlue());
+            graphics2D.setPaint(colors[i]);
+            graphics2D.drawString(String.format(
+                    "Count: %d" ,classify[i].size()),
+                    X*100,
+                    40+Y*100
+            );
+            graphics2D.drawString(String.format(
+                    "Coords: (%d,%d)" ,X,Y),
+                    X*100,
+                    60+Y*100
+            );
+        }
+    }
+
+    private void visualizeWTAMapping(NeuralNetwork[] networks, int j, BufferedImage bufferedImage) {
+        Graphics2D graphics2D=bufferedImage.createGraphics();
+        graphics2D.drawImage(bufferedImage,0,0, null);
+        graphics2D.setPaint(java.awt.Color.BLACK);
         float[][] values=new float[3][3];
         for (int i = 0; i < 3; i++) {
             for (int k = 0; k < 3; k++) {
                 values[i][k]=0.0f;
             }
         }
-        //for(int i=1;i<=3;i++)
-        //{
-        //    List[] list=classify(networks[j]);
-        //    System.out.println(String.format("Network: %d; Expected classification to class %d of size %d",j,i,this.data.size()/3));
-        //    for (int k = 0; k < list.length; k++) {
-        //        int
-        //    }
-        //}
-        //List[][] list=new List[3][];
-        //for(int i=0;i<3;i++)
-        //{
-        //    this.data=splitted[i];
-        //    list[i]=classify(networks[j]);
-        //    System.out.println(String.format("Network: %d; Expected classification to class %d of size %d",j,i,splitted[i].size()));
-        //    for (int k = 0; k < 3; k++) {
-        //        System.out.println(String.format("Class %d, size %d",k,list[i][k].size()));
-        //        values[k][i]+=(float)list[i][k].size()/(float)splitted[i].size();
-        //    }
-        //
-        //}
         List[] classify=classify(networks[j]);
         List[] splitted=splitData();
         int[][] list=new int[3][3];
@@ -492,11 +533,6 @@ public class NeuralNetworkLogic {
                     i*100,
                     85+j*100
             );
-            //for (int k = 0; k < 100; k++) {
-            //    for (int l = 0; l < 100; l++) {
-            //        //writer.setColor(i*100+k,l,colors[i]);
-            //    }
-            //}
         }
     }
 

@@ -62,7 +62,8 @@
             <RadioButton fx:id="ojiRadio" mnemonicParsing="false" text="Zad 3 - Sieć z uczeniem metodą Oji" toggleGroup="$tasks" />
             <RadioButton fx:id="kohonenRadio" mnemonicParsing="false" text="Zad 4 - Sieć Kohonena, typu WTA, dla zadania Hebba" toggleGroup="$tasks" />
             <RadioButton fx:id="kohonenPerceptronRadio" mnemonicParsing="false" text="Zad 4 - Sieć Kohonena, typu WTA, uczenie sieci MCP na podklasach" toggleGroup="$tasks" />
-            <RadioButton fx:id="mapRadio" mnemonicParsing="false" text="Zad 5 - Sieć Kohonena, typu WTA, generowanie mapy" toggleGroup="$tasks" />
+            <RadioButton fx:id="mapRadio" mnemonicParsing="false" text="Zad 5 - Sieć WTA, generowanie mapy" toggleGroup="$tasks" />
+            <RadioButton fx:id="somMapRadio" mnemonicParsing="false" text="Zad 6 - Sieć SOM, z sąsiedztwem, generowanie mapy" toggleGroup="$tasks" />
          </children>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -72,6 +73,7 @@
             <Button id="generateDataButton" fx:id="generateDataButton" mnemonicParsing="false" onAction="#generateData" text="Generuj zbiór uczący" />
             <Button id="generateDataButton" fx:id="generateTunnelDataButton1" mnemonicParsing="false" onAction="#generateTunnelData" text="Generuj zbiór uczący - tunel" />
             <Button id="generateDataButton" fx:id="generateHebbDataButton" mnemonicParsing="false" onAction="#generateUnsupervisedLearningData" text="Generuj zbiór uczący - Hebb" />
+            <Button id="generateDataButton" fx:id="generateSOMDataButton" mnemonicParsing="false" onAction="#generateSOMLearningData" text="Generuj zbiór uczący - SOM" />
          </children>
       </VBox>
    </children>

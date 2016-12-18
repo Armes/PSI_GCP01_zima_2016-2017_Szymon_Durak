@@ -5,8 +5,8 @@ import sample.neurons.ClassifierNeuron;
 /**
  * Created by Szymon on 03.12.2016.
  */
-public class KohonenNetwork extends NeuralNetwork<ClassifierNeuron> {
-    public KohonenNetwork(int in, int out) throws Exception {
+public class WTANetwork extends NeuralNetwork<ClassifierNeuron> {
+    public WTANetwork(int in, int out) throws Exception {
         super(new Integer[]{in,out},ClassifierNeuron.class);
     }
 
